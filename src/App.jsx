@@ -8,6 +8,8 @@ import {
   Plus,
   ShieldCheck,
 } from "@phosphor-icons/react";
+import { WorkflowDemo } from "./WorkflowDemo";
+import "./workflow-demo.css";
 
 const asset = (name) => `${import.meta.env.BASE_URL}assets/${name}`;
 const GITHUB_REPO = "https://github.com/Teolfeu/korda";
@@ -42,6 +44,7 @@ export function App() {
       <nav aria-label="Navegação principal">
         <a href="#produto">Produto</a>
         <a href="#recursos">Recursos</a>
+        <a href="#demonstracao">Demonstração</a>
         <a href="#como-funciona">Como funciona</a>
         <a href="#local-first">Local-first</a>
       </nav>
@@ -87,6 +90,8 @@ export function App() {
         </div>
         <img className="role-cords" src={asset("role-cords.png")} alt="" aria-hidden="true" loading="lazy" />
       </section>
+
+      <WorkflowDemo />
 
       <section className="flow-statement section-pad">
         <h2>O fluxo deixa<br />de ser abstrato.</h2>
