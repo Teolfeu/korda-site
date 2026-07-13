@@ -81,6 +81,28 @@ function stateLabel(value) {
   return "Aguardando";
 }
 
+function nodeProgress(nodeId, phaseId) {
+  const state = nodeState(nodeId, phaseId);
+  if (state === "complete") return 100;
+  if (state === "waiting") return 0;
+  if (nodeId === "orchestrator") {
+    if (phaseId === "plan") return 32;
+    if (phaseId === "delegate") return 58;
+    return 88;
+  }
+  if (nodeId === "reviewer") return 72;
+  return phaseId === "delegate" ? 28 : 74;
+}
+
+function cordClasses(target, phaseId) {
+  const isWorker = target === "executor" || target === "researcher";
+  const active = isWorker
+    ? ["delegate", "execute", "review"].includes(phaseId)
+    : ["review", "consolidate"].includes(phaseId);
+  const returning = isWorker ? phaseId === "review" : phaseId === "consolidate";
+  return `workflow-cord__flow workflow-cord--${target}${active ? " is-active" : ""}${returning ? " is-return" : ""}`;
+}
+
 function taskFor(nodeId, scenario) {
   if (nodeId === "orchestrator") return scenario.objective;
   return scenario[nodeId];
@@ -88,14 +110,22 @@ function taskFor(nodeId, scenario) {
 
 function WorkflowNode({ node, scenario, phaseId }) {
   const state = nodeState(node.id, phaseId);
+  const progress = nodeProgress(node.id, phaseId);
   const Icon = node.Icon;
-  return <article className={`workflow-node ${node.className} is-${state}`} aria-label={`${node.role}, ${node.name}: ${stateLabel(state)}`}>
+  return <article className={`workflow-node ${node.className} is-${state}`} aria-label={`${node.role}, ${node.name}: ${stateLabel(state)}, ${progress}%`}>
     <header className="workflow-node__head">
       <span className="workflow-node__icon"><Icon size={18} weight="duotone" aria-hidden="true" /></span>
-      <span><small className="workflow-node__role">{node.role}</small><b className="workflow-node__name">{node.name}</b></span>
+      <span className="workflow-node__identity"><small className="workflow-node__role">{node.role}</small><b className="workflow-node__name">{node.name}</b></span>
+      <span className={`workflow-node__state is-${state}`}><i aria-hidden="true" />{stateLabel(state)}</span>
     </header>
+    <small className="workflow-node__task-label">Tarefa atual</small>
     <p className="workflow-node__task">{taskFor(node.id, scenario)}</p>
-    <span className="workflow-node__status"><i aria-hidden="true" />{stateLabel(state)}</span>
+    <footer className="workflow-node__footer">
+      <div className="workflow-node__progress" role="progressbar" aria-label={`Progresso de ${node.role}`} aria-valuemin="0" aria-valuemax="100" aria-valuenow={progress}>
+        <i style={{ width: `${progress}%` }} aria-hidden="true" />
+      </div>
+      <span className="workflow-node__progress-value">{progress}%</span>
+    </footer>
   </article>;
 }
 
@@ -201,29 +231,60 @@ export function WorkflowDemo() {
 
   return <section className="workflow-demo" id="demonstracao" data-phase={phase.id} ref={sectionRef} aria-labelledby="workflow-demo-title">
     <div className="workflow-demo__intro">
-      <p className="workflow-demo__eyebrow">Veja a orquestração acontecer</p>
-      <h2 className="workflow-demo__title" id="workflow-demo-title">Um objetivo.<br />Quatro papéis.</h2>
-      <p className="workflow-demo__copy">Escolha um cenário e acompanhe uma simulação visual. No aplicativo, cada bloco representa um agente e cada corda autoriza a comunicação entre eles.</p>
+      <p className="workflow-demo__eyebrow">Orquestração em movimento</p>
+      <h2 className="workflow-demo__title" id="workflow-demo-title">Um objetivo. Quatro papéis.</h2>
+      <p className="workflow-demo__copy">Escolha um cenário e veja agentes conectados planejarem, executarem e validarem juntos.</p>
     </div>
 
     <div className="workflow-demo__shell">
       <header className="workflow-demo__topbar">
-        <span className="workflow-demo__status"><i aria-hidden="true" />{scenario.label}: {phase.label}. {phase.detail}</span>
-        <div className="workflow-demo__counters" aria-label="Resumo dos agentes"><span>{counters.active} {counters.active === 1 ? "ativo" : "ativos"}</span><span>{counters.waiting} aguardando</span><span>{counters.complete} {counters.complete === 1 ? "concluído" : "concluídos"}</span></div>
+        <div className="workflow-demo__toolbar">
+          <div className="workflow-demo__status">
+            <span className="workflow-demo__status-dot" aria-hidden="true" />
+            <span><b>{scenario.label}</b><small>{phase.label} · {phase.detail}</small></span>
+          </div>
+          <div className="workflow-demo__counters" aria-label="Resumo dos agentes">
+            <span><i className="is-active" aria-hidden="true" /><b>{counters.active}</b> ativos</span>
+            <span><i className="is-waiting" aria-hidden="true" /><b>{counters.waiting}</b> aguardando</span>
+            <span><i className="is-complete" aria-hidden="true" /><b>{counters.complete}</b> concluídos</span>
+          </div>
+        </div>
+        <ol className="workflow-demo__timeline" aria-label="Etapas do fluxo">
+          {phases.map((item, index) => {
+            const isCurrent = index === phaseIndex;
+            const isComplete = index < phaseIndex;
+            return <li key={item.id} className={`workflow-demo__phase${isCurrent ? " is-current" : ""}${isComplete ? " is-complete" : ""}`} aria-current={isCurrent ? "step" : undefined}>
+              <span aria-hidden="true">{isComplete ? "✓" : index + 1}</span>
+              <b>{item.label}</b>
+            </li>;
+          })}
+        </ol>
       </header>
 
       <div className="workflow-demo__stage" data-phase={phase.id} aria-label={`Canvas simulado na fase ${phase.label}`}>
-        <WorkflowNode node={nodes[0]} scenario={scenario} phaseId={phase.id} />
-        <div className={`workflow-link workflow-link--executor ${["delegate", "execute"].includes(phase.id) ? "is-active" : ""}`} aria-hidden="true" />
-        <div className={`workflow-link workflow-link--researcher ${["delegate", "execute"].includes(phase.id) ? "is-active" : ""}`} aria-hidden="true" />
-        <div className={`workflow-link workflow-link--reviewer ${["review", "consolidate"].includes(phase.id) ? "is-active" : ""}`} aria-hidden="true" />
-        <WorkflowNode node={nodes[1]} scenario={scenario} phaseId={phase.id} />
-        <WorkflowNode node={nodes[2]} scenario={scenario} phaseId={phase.id} />
-        <WorkflowNode node={nodes[3]} scenario={scenario} phaseId={phase.id} />
+        <svg className="workflow-demo__cords" viewBox="0 0 1000 460" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <path className="workflow-cord workflow-cord__base workflow-cord--executor" d="M 500 145 C 500 225 180 210 180 318" />
+          <path className={cordClasses("executor", phase.id)} d="M 500 145 C 500 225 180 210 180 318" />
+          <path className="workflow-cord workflow-cord__base workflow-cord--researcher" d="M 500 145 C 500 220 500 235 500 318" />
+          <path className={cordClasses("researcher", phase.id)} d="M 500 145 C 500 220 500 235 500 318" />
+          <path className="workflow-cord workflow-cord__base workflow-cord--reviewer" d="M 500 145 C 500 225 820 210 820 318" />
+          <path className={cordClasses("reviewer", phase.id)} d="M 500 145 C 500 225 820 210 820 318" />
+        </svg>
+        <div className="workflow-demo__orchestrator">
+          <WorkflowNode node={nodes[0]} scenario={scenario} phaseId={phase.id} />
+        </div>
+        <div className="workflow-demo__workers">
+          <WorkflowNode node={nodes[1]} scenario={scenario} phaseId={phase.id} />
+          <WorkflowNode node={nodes[2]} scenario={scenario} phaseId={phase.id} />
+          <WorkflowNode node={nodes[3]} scenario={scenario} phaseId={phase.id} />
+        </div>
       </div>
 
-      <footer className="workflow-demo__scenarios" aria-label="Cenários da demonstração">
-        {scenarios.map((item) => <button key={item.id} type="button" className="workflow-demo__scenario" aria-pressed={scenarioId === item.id} onClick={() => chooseScenario(item.id)}>{item.label}</button>)}
+      <footer className="workflow-demo__footer">
+        <div className="workflow-demo__scenarios" aria-label="Cenários da demonstração">
+          <span className="workflow-demo__scenario-label">Cenário</span>
+          {scenarios.map((item) => <button key={item.id} type="button" className="workflow-demo__scenario" aria-pressed={scenarioId === item.id} onClick={() => chooseScenario(item.id)}>{item.label}</button>)}
+        </div>
         <button type="button" className="workflow-demo__control" aria-label={reducedMotion ? "Avançar para a próxima etapa" : userPaused ? "Retomar demonstração" : "Pausar demonstração"} aria-pressed={reducedMotion ? undefined : userPaused} onClick={controlDemo}>{reducedMotion || userPaused ? <Play size={15} weight="fill" aria-hidden="true" /> : <Pause size={15} weight="fill" aria-hidden="true" />}{reducedMotion ? "Próxima etapa" : userPaused ? "Retomar" : "Pausar"}</button>
       </footer>
     </div>
