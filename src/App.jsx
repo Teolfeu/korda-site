@@ -63,9 +63,16 @@ export function App() {
           </div>
           <small>AppImage · Linux x86_64 · v0.1.0</small>
         </div>
-        <div className="hero-proof" aria-label="Korda com agentes conectados em um canvas">
-          <img src={asset("korda-workspace-browser-hq.png")} alt="Interface do Korda exibindo workspace, agentes, navegador, nota e terminais no canvas" fetchPriority="high" />
-        </div>
+        <figure className="hero-proof" aria-label="Korda com agentes conectados em um canvas">
+          <div className="hero-proof-shot">
+            <img src={asset("canvas.webp")} alt="Interface do Korda exibindo o workspace e agentes conectados no canvas" fetchPriority="high" />
+          </div>
+          <div className="hero-proof-detail">
+            <span>Sessão do agente</span>
+            <img src={asset("terminal.webp")} alt="Detalhe de um terminal de agente exibindo testes concluídos" />
+          </div>
+          <figcaption><b>Fluxo conectado</b><span>Workspace, papéis, terminais e navegador no mesmo plano.</span></figcaption>
+        </figure>
         <Plus className="registration-mark bottom-left" aria-hidden="true" />
         <Plus className="registration-mark bottom-right" aria-hidden="true" />
       </section>
