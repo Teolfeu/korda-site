@@ -2,6 +2,7 @@ import {
   ArrowRight,
   Binoculars,
   Brain,
+  DownloadSimple,
   GithubLogo,
   Lightning,
   Plus,
@@ -9,7 +10,8 @@ import {
 } from "@phosphor-icons/react";
 
 const asset = (name) => `${import.meta.env.BASE_URL}assets/${name}`;
-const GITHUB_REPO = "https://github.com/Teolfeu/korda-site";
+const GITHUB_REPO = "https://github.com/Teolfeu/korda";
+const DOWNLOAD_URL = "https://github.com/Teolfeu/korda/releases/download/v0.1.0/Korda-0.1.0-x86_64.AppImage";
 
 const roles = [
   { name: "Orquestrador", tone: "blue", Icon: Brain, text: "Entende o objetivo, cria o plano e coordena os agentes conectados." },
@@ -43,7 +45,7 @@ export function App() {
         <a href="#como-funciona">Como funciona</a>
         <a href="#local-first">Local-first</a>
       </nav>
-      <a className="button button-small" href={GITHUB_REPO} target="_blank" rel="noreferrer">GitHub <GithubLogo size={15} aria-hidden="true" /></a>
+      <a className="button button-small" href={DOWNLOAD_URL}><DownloadSimple size={15} aria-hidden="true" />Baixar</a>
     </header>
 
     <main id="top">
@@ -56,13 +58,13 @@ export function App() {
           <img className="hero-cord" src={asset("hero-cord.png")} alt="" aria-hidden="true" />
           <p className="hero-lead">Planeje, delegue e acompanhe o trabalho do seu time de agentes em um único canvas.</p>
           <div className="hero-actions">
-            <a className="button" href={GITHUB_REPO} target="_blank" rel="noreferrer"><GithubLogo size={16} aria-hidden="true" />Ver Korda no GitHub</a>
+            <a className="button" href={DOWNLOAD_URL}><DownloadSimple size={17} aria-hidden="true" />Baixar Korda para Linux</a>
             <a className="button button-outline" href="#como-funciona">Ver como funciona</a>
           </div>
-          <small>Landing pública · aplicativo desktop distribuído separadamente</small>
+          <small>AppImage · Linux x86_64 · v0.1.0</small>
         </div>
         <div className="hero-proof" aria-label="Korda com agentes conectados em um canvas">
-          <img src={asset("canvas.webp")} alt="Interface do Korda exibindo Explorer, Orquestrador, agentes, navegador e cordas no canvas" fetchPriority="high" />
+          <img src={asset("korda-workspace-browser-hq.png")} alt="Interface do Korda exibindo workspace, agentes, navegador, nota e terminais no canvas" fetchPriority="high" />
         </div>
         <Plus className="registration-mark bottom-left" aria-hidden="true" />
         <Plus className="registration-mark bottom-right" aria-hidden="true" />
@@ -87,17 +89,17 @@ export function App() {
       <section className="proofs" aria-label="Recursos do Korda">
         <article className="proof-row terminal-row">
           <div><p className="eyebrow">PTY real</p><h2>Trabalho real,<br />dentro de cada bloco.</h2></div>
-          <ProductFrame src={asset("terminal.webp")} alt="Terminal de um agente executor dentro de um bloco do Korda" />
+          <ProductFrame src={asset("korda-terminal-hq.png")} alt="Terminal de um agente orquestrador dentro de um bloco do Korda" />
           <p>Agentes se conectam a PTYs reais, executam comandos, rodam testes e devolvem resultados visíveis no próprio canvas.</p>
         </article>
         <article className="proof-row">
           <div><p className="eyebrow">Contexto à vista</p><h2>Projeto e navegador<br />lado a lado.</h2></div>
-          <ProductFrame src={asset("workspace-browser.webp")} alt="Explorer do workspace e navegador Chromium abertos no Korda" />
+          <ProductFrame src={asset("korda-workspace-browser-hq.png")} alt="Explorer do workspace e navegador abertos no Korda" />
           <p>Abra arquivos do workspace e mantenha a aplicação visível enquanto os agentes codam, testam e verificam o resultado.</p>
         </article>
         <article className="proof-row metrics-row">
           <div><p className="eyebrow">Telemetria local</p><h2>Métricas<br />honestas.</h2></div>
-          <ProductFrame src={asset("metrics.webp")} alt="Painel operacional do Korda com progresso e atividade observada" />
+          <ProductFrame src={asset("korda-metrics-hq.png")} alt="Painel operacional do Korda com progresso e atividade observada" />
           <p>Acompanhe sessões, atividade e progresso observados localmente. Tokens, cotas e custos só aparecem quando a CLI fornece dados verificáveis.</p>
         </article>
       </section>
@@ -120,13 +122,13 @@ export function App() {
         </aside>
       </section>
 
-      <section className="download" id="github">
+      <section className="download" id="download">
         <Brand inverse />
-        <div><p className="eyebrow">Korda no GitHub</p><h2>Acompanhe a evolução<br />do Korda.</h2></div>
-        <div className="download-action"><a className="button button-light" href={GITHUB_REPO} target="_blank" rel="noreferrer"><GithubLogo size={16} aria-hidden="true" />Abrir repositório</a><small>Repositório público da landing; o aplicativo permanece separado.</small></div>
+        <div><p className="eyebrow">Korda para Linux</p><h2>Seu time de agentes,<br />pronto para conectar.</h2></div>
+        <div className="download-action"><a className="button button-light" href={DOWNLOAD_URL}><DownloadSimple size={17} aria-hidden="true" />Baixar AppImage</a><small>Linux x86_64 · v0.1.0 · código aberto</small></div>
       </section>
     </main>
 
-    <footer className="site-footer"><Brand /><p>Korda · orquestração local e visual para agentes de terminal.</p><a href="#top">Voltar ao topo</a></footer>
+    <footer className="site-footer"><Brand /><p>Korda · orquestração local e visual para agentes de terminal.</p><div className="footer-links"><a href={GITHUB_REPO} target="_blank" rel="noreferrer"><GithubLogo size={15} aria-hidden="true" />GitHub</a><a href="#top">Voltar ao topo</a></div></footer>
   </div>;
 }
