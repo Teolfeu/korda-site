@@ -1,250 +1,313 @@
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
   ArrowsLeftRight,
   Binoculars,
   Brain,
-  CheckCircle,
+  Browser,
+  ChartLineUp,
+  Check,
   Code,
   DownloadSimple,
   Eye,
+  FolderOpen,
   GithubLogo,
   HardDrive,
   LinuxLogo,
+  List,
   LockKey,
-  Lightning,
-  PlayCircle,
+  PencilSimple,
   ShieldCheck,
   TerminalWindow,
+  X,
 } from "@phosphor-icons/react";
-import { WorkflowDemo } from "./WorkflowDemo";
-import "./workflow-demo.css";
 
 const asset = (name) => `${import.meta.env.BASE_URL}assets/${name}`;
 const GITHUB_REPO = "https://github.com/Teolfeu/korda";
 const DOWNLOAD_URL = "https://github.com/Teolfeu/korda/releases/download/v0.1.0/Korda-0.1.0-x86_64.AppImage";
+const ISSUES_URL = `${GITHUB_REPO}/issues`;
 
-const roles = [
-  { name: "Orquestrador", tone: "blue", Icon: Brain, text: "Entende o objetivo, organiza o plano e coordena os agentes conectados." },
-  { name: "Executor", tone: "orange", Icon: Lightning, text: "Executa tarefas no terminal e devolve evidências do trabalho." },
-  { name: "Revisor", tone: "green", Icon: ShieldCheck, text: "Valida resultados, aponta problemas e solicita correções." },
-  { name: "Pesquisador", tone: "cyan", Icon: Binoculars, text: "Pesquisa, cruza fontes e retorna evidências verificáveis." },
+const workflow = [
+  {
+    name: "Orquestre",
+    text: "Defina o objetivo e deixe o Orquestrador organizar o trabalho.",
+    Icon: Brain,
+  },
+  {
+    name: "Execute",
+    text: "Agentes conectados recebem pedidos e trabalham em seus próprios terminais.",
+    Icon: TerminalWindow,
+  },
+  {
+    name: "Revise",
+    text: "O Revisor valida a entrega e pode solicitar correções antes da conclusão.",
+    Icon: ShieldCheck,
+  },
+  {
+    name: "Pesquise",
+    text: "O Pesquisador cruza fontes e devolve evidências para o fluxo.",
+    Icon: Binoculars,
+  },
+  {
+    name: "Consolide",
+    text: "Pedidos e respostas voltam pela corda para uma entrega legível.",
+    Icon: ArrowsLeftRight,
+  },
 ];
 
-const steps = [
-  ["01", "Abra o projeto", "Escolha a pasta de trabalho que os agentes poderão acessar."],
-  ["02", "Monte o time", "Adicione os agentes, atribua papéis e conecte as cordas."],
-  ["03", "Dê o objetivo", "Converse com o Orquestrador e acompanhe a delegação no canvas."],
-  ["04", "Valide a entrega", "Veja respostas, revisão e evidências antes de concluir."],
-];
-
-const gallery = [
+const productViews = [
   {
     number: "01",
-    eyebrow: "Canvas operacional",
-    title: "O time inteiro cabe no mesmo plano.",
-    text: "Organize agentes, terminais, notas e navegador sem esconder o que cada processo está fazendo.",
-    image: "korda-canvas-real.webp",
-    alt: "Canvas real do Korda com agentes e terminais organizados visualmente",
-    className: "gallery-card--wide",
-    tags: ["Blocos redimensionáveis", "Conexões visíveis"],
+    eyebrow: "Workspace",
+    title: "Arquivos e resultado no mesmo lugar.",
+    text: "A árvore acompanha mudanças da pasta. Abra e edite arquivos enquanto mantém o navegador no canvas.",
+    image: "korda-workspace-browser-hq.png",
+    width: 1920,
+    height: 969,
+    alt: "Workspace e navegador reais abertos no Korda",
+    Icon: FolderOpen,
+    className: "product-card--wide",
   },
   {
     number: "02",
-    eyebrow: "Workspace e navegador",
-    title: "Código e resultado, lado a lado.",
-    text: "Abra arquivos do projeto, edite o conteúdo e mantenha a aplicação visível enquanto os agentes trabalham.",
-    image: "korda-browser-real.webp",
-    alt: "Workspace e navegador abertos dentro do Korda",
-    tags: ["Arquivos ao vivo", "Browser no canvas"],
+    eyebrow: "Terminal",
+    title: "Cada agente mantém seu processo.",
+    text: "PTYs reais, blocos redimensionáveis e foco no terminal que está executando o trabalho.",
+    image: "korda-terminal-hq.png",
+    width: 1800,
+    height: 1135,
+    alt: "Terminal real de um agente dentro do canvas do Korda",
+    Icon: TerminalWindow,
   },
   {
     number: "03",
-    eyebrow: "Telemetria local",
-    title: "Atividade com fonte identificada.",
-    text: "Acompanhe sessões e progresso observados localmente. Uso e custo aparecem quando a CLI fornece dados verificáveis.",
-    image: "korda-metrics-real.webp",
-    alt: "Painel de métricas e atividade local do Korda",
-    tags: ["Uso observado", "Sem números inventados"],
+    eyebrow: "Atividade local",
+    title: "Acompanhe apenas o que é verificável.",
+    text: "Sessões, PTYs e atividade aparecem localmente. Tokens e custos só entram quando a CLI fornece os dados.",
+    image: "korda-metrics-hq.png",
+    width: 1800,
+    height: 1178,
+    alt: "Painel real de atividade e estatísticas do Korda",
+    Icon: ChartLineUp,
   },
 ];
 
-function Brand({ inverse = false }) {
-  return <span className={`brand${inverse ? " brand--inverse" : ""}`}><img src={asset("korda-mark.png")} alt="" width="40" height="40" /><b>Korda</b></span>;
+function Brand() {
+  return (
+    <span className="brand">
+      <img src={asset("korda-mark.png")} alt="" width="44" height="44" />
+      <b>Korda</b>
+    </span>
+  );
 }
 
-function ProductImage({ src, alt, priority = false }) {
-  return <img
-    src={asset(src)}
-    alt={alt}
-    width="1440"
-    height="900"
-    loading={priority ? "eager" : "lazy"}
-    fetchPriority={priority ? "high" : "auto"}
-    decoding={priority ? "sync" : "async"}
-  />;
+function DownloadButton({ className = "" }) {
+  return (
+    <a className={`button ${className}`.trim()} href={DOWNLOAD_URL}>
+      <DownloadSimple size={18} aria-hidden="true" />
+      Baixar para Linux
+    </a>
+  );
 }
 
 export function App() {
-  return <div className="site-shell">
-    <a className="skip-link" href="#top">Pular para o conteúdo</a>
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef(null);
 
-    <header className="site-header">
-      <a className="brand-link" href="#top" aria-label="Korda — início"><Brand /></a>
-      <nav className="site-header__nav" aria-label="Navegação principal">
-        <a href="#produto">Produto</a>
-        <a href="#video">Vídeo</a>
-        <a href="#demonstracao">Demonstração</a>
-        <a href="#recursos">Recursos</a>
-        <a href="#local-first">Local-first</a>
-      </nav>
-      <div className="site-header__actions">
-        <a className="header-github" href={GITHUB_REPO} target="_blank" rel="noreferrer"><GithubLogo size={17} aria-hidden="true" /><span>GitHub</span></a>
-        <a className="button button--small" href={DOWNLOAD_URL}><DownloadSimple size={16} aria-hidden="true" /><span>Baixar</span></a>
-      </div>
-    </header>
+  useEffect(() => {
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape" && menuOpen) {
+        setMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [menuOpen]);
 
-    <main id="top">
-      <section className="hero grid-surface" id="produto">
-        <div className="hero__glow" aria-hidden="true" />
-        <div className="hero__copy">
-          <p className="eyebrow"><span aria-hidden="true" />Workspace visual para agentes de terminal</p>
-          <h1>Agentes que trabalham <em>juntos, à vista.</em></h1>
-          <p className="hero__lead">Abra seu projeto, conecte agentes por função e acompanhe delegação, execução e revisão em um canvas local — com terminais reais.</p>
-          <div className="hero__actions">
-            <a className="button" href={DOWNLOAD_URL}><DownloadSimple size={18} aria-hidden="true" />Baixar Korda para Linux</a>
-            <a className="button button--ghost" href="#video"><PlayCircle size={18} aria-hidden="true" />Assistir ao vídeo</a>
-          </div>
-          <div className="hero__meta" aria-label="Características principais">
-            <span><HardDrive size={15} aria-hidden="true" /><b>Local-first</b><small>Seu projeto na sua máquina</small></span>
-            <span><TerminalWindow size={15} aria-hidden="true" /><b>PTY real</b><small>CLIs que você já usa</small></span>
-            <span><Code size={15} aria-hidden="true" /><b>Código aberto</b><small>Inspecione e contribua</small></span>
-          </div>
+  const closeMenu = () => setMenuOpen(false);
+
+  return (
+    <div className="site-shell">
+      <a className="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+      <header className="site-header">
+        <a className="brand-link" href="#top" aria-label="Korda — início" onClick={closeMenu}>
+          <Brand />
+        </a>
+
+        <button
+          ref={menuButtonRef}
+          className="menu-toggle"
+          type="button"
+          aria-expanded={menuOpen}
+          aria-controls="main-navigation"
+          aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+          onClick={() => setMenuOpen((value) => !value)}
+        >
+          {menuOpen ? <X size={22} aria-hidden="true" /> : <List size={22} aria-hidden="true" />}
+        </button>
+
+        <div className={`header-panel${menuOpen ? " is-open" : ""}`} id="main-navigation">
+          <nav className="site-nav" aria-label="Navegação principal">
+            <a href="#fluxo" onClick={closeMenu}>Como funciona</a>
+            <a href="#produto" onClick={closeMenu}>Produto</a>
+            <a href="#controle" onClick={closeMenu}>Controle local</a>
+            <a href={`${GITHUB_REPO}#readme`} target="_blank" rel="noreferrer" onClick={closeMenu}>Documentação</a>
+            <a href={GITHUB_REPO} target="_blank" rel="noreferrer" onClick={closeMenu}>GitHub</a>
+          </nav>
+          <DownloadButton className="button--header" />
         </div>
+      </header>
 
-        <div className="hero__visual" aria-label="Captura real do Korda em funcionamento">
-          <figure className="app-window app-window--hero">
-            <div className="app-window__bar" aria-hidden="true">
-              <span className="window-dots"><i /><i /><i /></span>
-              <span className="app-window__title"><img src={asset("korda-mark.png")} alt="" width="18" height="18" />workspace / projeto local</span>
-              <span className="live-status"><i />Broker ativo</span>
+      <main id="conteudo" tabIndex="-1">
+        <section className="hero grid-surface" id="top">
+          <div className="hero-copy">
+            <p className="eyebrow">Orquestração visual para agentes de terminal</p>
+            <h1><span>Conecte agentes.</span><span>Veja o <em>trabalho acontecer.</em></span></h1>
+            <p className="hero-lead">Abra seu projeto, defina o papel de cada agente e conecte o fluxo em um único canvas — com terminais reais rodando na sua máquina.</p>
+            <div className="hero-actions">
+              <DownloadButton />
+              <a className="button button--secondary" href={GITHUB_REPO} target="_blank" rel="noreferrer">
+                <GithubLogo size={19} aria-hidden="true" />
+                Ver no GitHub
+              </a>
             </div>
-            <div className="app-window__image"><ProductImage src="korda-canvas-real.webp" alt="Interface real do Korda mostrando um time de agentes conectado no canvas" priority /></div>
+            <dl className="hero-facts">
+              <div><dt><LockKey size={20} aria-hidden="true" />Coordenação local</dt><dd>O runtime do Korda fica no seu ambiente.</dd></div>
+              <div><dt><TerminalWindow size={20} aria-hidden="true" />Terminal no centro</dt><dd>Trabalhe com as CLIs já instaladas.</dd></div>
+              <div><dt><Eye size={20} aria-hidden="true" />Fluxo visível</dt><dd>Veja papéis, conexões e respostas.</dd></div>
+            </dl>
+          </div>
+
+          <figure className="hero-product">
+            <div className="hero-product__label"><span />Visão do produto</div>
+            <img src={asset("korda-canvas-real.webp")} width="1440" height="900" alt="Korda com workspace, quatro agentes conectados, navegador e inspetor no canvas" fetchPriority="high" />
+            <figcaption><b>Um workspace.</b><span>Agentes, arquivos e navegador conectados no canvas.</span></figcaption>
           </figure>
-          <div className="hero-callout hero-callout--top"><span><Brain size={18} weight="duotone" aria-hidden="true" /></span><div><small>Orquestrador</small><b>Delegando trabalho</b></div><i /></div>
-          <div className="hero-callout hero-callout--bottom"><span><ArrowsLeftRight size={18} aria-hidden="true" /></span><div><small>Cordas ativas</small><b>Contexto autorizado</b></div></div>
-          <p className="hero__caption"><span>Canvas real do produto</span><b>Agentes, arquivos e browser no mesmo workspace</b></p>
-        </div>
-      </section>
 
-      <aside className="signal-bar" aria-label="Compatibilidade e princípios do Korda">
-        <span><LinuxLogo size={17} aria-hidden="true" />Linux x86_64</span>
-        <i aria-hidden="true" />
-        <span><LockKey size={17} aria-hidden="true" />Runtime local</span>
-        <i aria-hidden="true" />
-        <span><GithubLogo size={17} aria-hidden="true" />Open source</span>
-        <p>AppImage · v0.1.0</p>
-      </aside>
+          <img className="hero-cord" src={asset("hero-cord.png")} alt="" aria-hidden="true" />
+        </section>
 
-      <section className="video-section" id="video" aria-labelledby="video-title">
-        <div className="section-heading section-heading--video">
-          <div><p className="eyebrow"><span aria-hidden="true" />Veja o Korda em ação</p><h2 id="video-title">Do objetivo à entrega, <em>sem perder o fio.</em></h2></div>
-          <p>Uma visão rápida de como papéis, cordas, terminais e workspace se tornam um fluxo de trabalho legível.</p>
-        </div>
-        <div className="video-stage">
-          <div className="video-stage__chrome" aria-hidden="true">
-            <span><img src={asset("korda-mark.png")} alt="" width="20" height="20" />Korda / demonstração</span>
-            <span>00:45 · tour visual</span>
-          </div>
-          <video
-            className="product-video"
-            controls
-            playsInline
-            preload="metadata"
-            poster={asset("korda-promo-poster.webp")}
-            width="1920"
-            height="1080"
-            aria-label="Vídeo demonstrativo do Korda organizando agentes em um canvas"
-            aria-describedby="video-description"
-          >
-            <source src={asset("korda-promo.mp4")} type="video/mp4" />
-            Seu navegador não consegue reproduzir este vídeo. <a href={asset("korda-promo.mp4")}>Abra o arquivo diretamente.</a>
-          </video>
-        </div>
-        <div className="video-notes" id="video-description">
-          <span><b>01</b><small>Monte o time</small>Escolha as CLIs e defina os papéis.</span>
-          <span><b>02</b><small>Conecte o contexto</small>Cordas autorizam o fluxo entre agentes.</span>
-          <span><b>03</b><small>Acompanhe o trabalho</small>Pedidos e respostas aparecem no canvas.</span>
-        </div>
-      </section>
+        <aside className="proof-bar" aria-label="Disponibilidade do Korda">
+          <span><LinuxLogo size={19} aria-hidden="true" />Linux x86_64</span>
+          <span><HardDrive size={19} aria-hidden="true" />AppImage v0.1.0</span>
+          <span><Code size={19} aria-hidden="true" />Aplicativo Apache-2.0</span>
+        </aside>
 
-      <section className="roles section-pad grid-surface" id="equipe">
-        <div className="section-heading section-heading--split">
-          <div><p className="eyebrow"><span aria-hidden="true" />Papéis claros</p><h2>Cada agente sabe <em>o que precisa fazer.</em></h2></div>
-          <p>Você monta o time visualmente. O Orquestrador distribui o objetivo entre os especialistas conectados, acompanha as respostas e consolida a entrega.</p>
-        </div>
-        <div className="roles__grid">
-          {roles.map(({ Icon, ...role }, index) => <article className={`role-card role-card--${role.tone}`} key={role.name}>
-            <header><span>0{index + 1}</span><Icon size={26} weight="duotone" aria-hidden="true" /></header>
-            <h3>{role.name}</h3><p>{role.text}</p>
-            <footer><i aria-hidden="true" />Papel definido</footer>
-          </article>)}
-        </div>
-        <div className="roles__rail" aria-hidden="true"><span /><i /><i /><i /><i /></div>
-      </section>
-
-      <WorkflowDemo />
-
-      <section className="gallery" id="recursos" aria-labelledby="gallery-title">
-        <div className="section-heading section-heading--gallery">
-          <div><p className="eyebrow"><span aria-hidden="true" />Produto, sem mockup</p><h2 id="gallery-title">O Korda por dentro.</h2></div>
-          <p>Capturas reais da aplicação: canvas amplo, ferramentas de trabalho e telemetria local com a mesma linguagem visual.</p>
-        </div>
-        <div className="gallery__grid">
-          {gallery.map((item) => <article className={`gallery-card ${item.className || ""}`} key={item.number}>
-            <div className="gallery-card__copy">
-              <span className="gallery-card__number">{item.number}</span>
-              <p className="eyebrow">{item.eyebrow}</p>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-              <ul>{item.tags.map((tag) => <li key={tag}><CheckCircle size={15} weight="fill" aria-hidden="true" />{tag}</li>)}</ul>
+        <section className="workflow section-boundary" id="fluxo">
+          <header className="section-heading section-heading--split">
+            <div>
+              <p className="eyebrow">Como funciona</p>
+              <h2>Agentes conectados, <em>trabalho coordenado.</em></h2>
             </div>
-            <figure className="gallery-card__media"><ProductImage src={item.image} alt={item.alt} /></figure>
-          </article>)}
-        </div>
-      </section>
+            <p>Você define os papéis e as conexões. O Korda entrega a topologia a cada agente e torna pedidos e respostas visíveis no canvas.</p>
+          </header>
 
-      <section className="how section-pad grid-surface" id="como-funciona">
-        <div className="how__heading"><p className="eyebrow"><span aria-hidden="true" />Do projeto à entrega</p><h2>Um fluxo que você consegue <em>acompanhar.</em></h2><p>Sem linguagem especial: monte o time, conecte os papéis e descreva o que precisa ser feito.</p></div>
-        <ol className="how__steps">{steps.map(([number, title, text], index) => <li key={number}>
-          <span>{number}</span><div><h3>{title}</h3><p>{text}</p></div>{index < steps.length - 1 && <ArrowRight size={18} aria-hidden="true" />}
-        </li>)}</ol>
-      </section>
+          <ol className="workflow-steps">
+            {workflow.map(({ name, text, Icon }, index) => (
+              <li key={name}>
+                <div className="workflow-step__top">
+                  <span><Icon size={27} weight="duotone" aria-hidden="true" /></span>
+                  {index < workflow.length - 1 && <ArrowRight size={19} aria-hidden="true" />}
+                </div>
+                <h3>{name}</h3>
+                <p>{text}</p>
+              </li>
+            ))}
+          </ol>
 
-      <section className="local" id="local-first">
-        <div className="local__copy"><p className="eyebrow"><span aria-hidden="true" />Arquitetura local-first</p><h2>Seu projeto não precisa sair <em>da sua máquina.</em></h2><p>O Korda coordena os processos no ambiente que você já usa, com comunicação explícita entre os blocos conectados.</p></div>
-        <div className="local__diagram" aria-label="Arquitetura local do Korda">
-          <article><span><Eye size={20} aria-hidden="true" /></span><small>Interface</small><h3>Canvas Korda</h3><p>Você organiza e acompanha.</p></article>
-          <ArrowRight aria-hidden="true" />
-          <article><span><LockKey size={20} aria-hidden="true" /></span><small>Coordenação</small><h3>Broker local</h3><p>Pedidos seguem pelas cordas.</p></article>
-          <ArrowRight aria-hidden="true" />
-          <article><span><TerminalWindow size={20} aria-hidden="true" /></span><small>Execução</small><h3>PTYs e arquivos</h3><p>Processos no seu ambiente.</p></article>
-        </div>
-        <aside className="cord-note"><img src={asset("korda-mark.png")} alt="" width="56" height="56" /><div><small>Conexão não é exposição total</small><h3>Uma corda autoriza comunicação entre blocos específicos.</h3><p>Ela não transmite automaticamente todo o terminal, histórico ou contexto. Cada solicitação passa pelo broker local autenticado.</p></div></aside>
-      </section>
+          <div className="context-note">
+            <ArrowsLeftRight size={24} aria-hidden="true" />
+            <p><b>Conexão explícita, não exposição total.</b> Uma corda autoriza pedidos e respostas entre blocos específicos; ela não copia automaticamente todo o terminal ou histórico.</p>
+          </div>
+        </section>
 
-      <section className="download" id="download">
-        <div className="download__mark"><img src={asset("korda-mark.png")} alt="" width="92" height="92" /></div>
-        <div className="download__copy"><p className="eyebrow">Comece local</p><h2>Monte o time. <em>Conecte o trabalho.</em></h2><p>Use o projeto e os agentes que já estão na sua máquina.</p></div>
-        <div className="download__actions"><a className="button button--light" href={DOWNLOAD_URL}><DownloadSimple size={18} aria-hidden="true" />Baixar AppImage</a><a href={GITHUB_REPO} target="_blank" rel="noreferrer"><GithubLogo size={17} aria-hidden="true" />Ver código no GitHub<ArrowUpRight size={14} aria-hidden="true" /></a><small>Linux x86_64 · v0.1.0 · código aberto</small></div>
-      </section>
-    </main>
+        <section className="product" id="produto">
+          <header className="section-heading section-heading--split">
+            <div>
+              <p className="eyebrow">Três visões. Um produto.</p>
+              <h2>O workspace, o fluxo <em>e os detalhes.</em></h2>
+            </div>
+            <p>Do código ao canvas, do terminal às estatísticas. Tudo o que você precisa acompanhar permanece no mesmo espaço de trabalho.</p>
+          </header>
 
-    <footer className="site-footer">
-      <div className="site-footer__brand"><Brand /><p>Orquestração local e visual para agentes de terminal.</p></div>
-      <nav aria-label="Navegação do rodapé"><a href="#produto">Produto</a><a href="#video">Vídeo</a><a href="#demonstracao">Demonstração</a><a href="#recursos">Recursos</a></nav>
-      <div className="site-footer__links"><a href={GITHUB_REPO} target="_blank" rel="noreferrer"><GithubLogo size={16} aria-hidden="true" />GitHub</a><a href="#top">Voltar ao topo</a></div>
-      <small>Korda · código aberto · Linux x86_64</small>
-    </footer>
-  </div>;
+          <div className="product-grid">
+            {productViews.map(({ number, eyebrow, title, text, image, alt, width, height, Icon, className = "" }) => (
+              <article className={`product-card ${className}`.trim()} key={number}>
+                <div className="product-card__copy">
+                  <span className="product-card__number">{number}</span>
+                  <p className="product-card__eyebrow"><Icon size={18} aria-hidden="true" />{eyebrow}</p>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </div>
+                <figure className="product-card__image">
+                  <img src={asset(image)} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
+                </figure>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="control section-boundary" id="controle">
+          <header className="section-heading section-heading--split">
+            <div>
+              <p className="eyebrow">Controle local</p>
+              <h2>Local onde importa. <em>Explícito por design.</em></h2>
+            </div>
+            <p>O Korda coordena processos no seu ambiente. Cada CLI mantém sua própria conta, conexão e política de dados.</p>
+          </header>
+
+          <div className="control-grid">
+            <article className="control-lead">
+              <span><LockKey size={30} weight="duotone" aria-hidden="true" /></span>
+              <h3>Seu workspace continua sob seu controle.</h3>
+              <p>Escolha a pasta, conecte apenas os blocos necessários e encerre qualquer processo pelo próprio canvas.</p>
+            </article>
+            <article><TerminalWindow size={24} aria-hidden="true" /><h3>Executa no seu ambiente</h3><p>PTYs locais usam as ferramentas instaladas na máquina.</p></article>
+            <article><PencilSimple size={24} aria-hidden="true" /><h3>Arquivos editáveis</h3><p>A árvore atualiza ao vivo e o editor protege contra conflitos.</p></article>
+            <article><Browser size={24} aria-hidden="true" /><h3>Navegador conectado</h3><p>Agentes autorizados podem navegar e coletar evidências no canvas.</p></article>
+            <article><Eye size={24} aria-hidden="true" /><h3>Telemetria honesta</h3><p>O painel mostra dados observados e sinaliza o que está indisponível.</p></article>
+          </div>
+        </section>
+
+        <section className="start">
+          <header className="section-heading section-heading--center">
+            <p className="eyebrow">Primeiro fluxo</p>
+            <h2>Do zero ao trabalho conectado <em>em três passos.</em></h2>
+          </header>
+          <ol className="start-steps">
+            <li><span>01</span><FolderOpen size={25} aria-hidden="true" /><h3>Abra uma pasta</h3><p>Escolha o projeto que será o workspace.</p></li>
+            <li><span>02</span><ArrowsLeftRight size={25} aria-hidden="true" /><h3>Adicione e conecte</h3><p>Selecione as CLIs detectadas e atribua os papéis.</p></li>
+            <li><span>03</span><Check size={25} aria-hidden="true" /><h3>Dê o objetivo</h3><p>Converse com o Orquestrador e acompanhe o fluxo.</p></li>
+          </ol>
+        </section>
+
+        <section className="download-section grid-surface" id="download">
+          <div className="download-section__mark"><img src={asset("korda-mark.png")} alt="" width="120" height="120" /></div>
+          <div className="download-section__copy">
+            <p className="eyebrow">Pronto para começar?</p>
+            <h2>Abra seu projeto. Monte o time. <em>Conecte o fluxo.</em></h2>
+            <p>Korda para Linux x86_64, distribuído como AppImage sob a licença Apache-2.0.</p>
+          </div>
+          <div className="download-section__actions">
+            <DownloadButton />
+            <a className="button button--secondary" href={GITHUB_REPO} target="_blank" rel="noreferrer"><GithubLogo size={19} aria-hidden="true" />Explorar no GitHub</a>
+          </div>
+        </section>
+      </main>
+
+      <footer className="site-footer">
+        <div><Brand /><p>Orquestração local e visual para agentes de terminal.</p></div>
+        <nav aria-label="Links do rodapé">
+          <a href={GITHUB_REPO} target="_blank" rel="noreferrer">GitHub<ArrowUpRight size={13} aria-hidden="true" /></a>
+          <a href={`${GITHUB_REPO}/releases`} target="_blank" rel="noreferrer">Releases<ArrowUpRight size={13} aria-hidden="true" /></a>
+          <a href={ISSUES_URL} target="_blank" rel="noreferrer">Reportar problema<ArrowUpRight size={13} aria-hidden="true" /></a>
+          <a href={`${GITHUB_REPO}/blob/main/LICENSE`} target="_blank" rel="noreferrer">Licença<ArrowUpRight size={13} aria-hidden="true" /></a>
+        </nav>
+        <small>© 2026 Korda. Aplicativo aberto sob Apache-2.0.</small>
+      </footer>
+    </div>
+  );
 }
