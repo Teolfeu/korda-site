@@ -359,6 +359,24 @@ a:focus-visible, button:focus-visible {
   transform: translateY(-3px);
 }
 
+/* ——— hero enter (CSS only — never depends on JS) ——— */
+.hero-enter {
+  animation: hero-in 0.9s var(--ease-out) both;
+}
+.hero-enter--late {
+  animation-delay: 0.12s;
+}
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ——— hero ——— */
 .hero {
   position: relative;
@@ -938,7 +956,9 @@ a:focus-visible, button:focus-visible {
   .kicker__dot,
   .hero__orbit,
   .float-pill,
-  .cta__aura { animation: none !important; }
+  .cta__aura,
+  .hero-enter { animation: none !important; }
+  .hero-enter { opacity: 1; transform: none; }
   [data-reveal] {
     opacity: 1;
     transform: none;
