@@ -38,7 +38,7 @@ import { WorkflowDemo } from "./WorkflowDemo.jsx";
 
 const asset = (name) => `${import.meta.env.BASE_URL}assets/${name}`;
 const GITHUB_REPO = "https://github.com/Teolfeu/korda";
-const DOWNLOAD_URL = "https://github.com/Teolfeu/korda/releases/download/v0.1.0/Korda-0.1.0-x86_64.AppImage";
+const DOWNLOAD_URL = "https://github.com/Teolfeu/korda/releases/download/v0.1.1/Korda-0.1.1-x86_64.AppImage";
 const ISSUES_URL = `${GITHUB_REPO}/issues`;
 
 const workflow = [
@@ -240,7 +240,7 @@ export function App() {
 
         <aside className="proof-bar" aria-label="Disponibilidade do Korda">
           <span><LinuxLogo size={19} aria-hidden="true" />Linux x86_64</span>
-          <span><HardDrive size={19} aria-hidden="true" />AppImage v0.1.0</span>
+          <span><HardDrive size={19} aria-hidden="true" />AppImage v0.1.1</span>
           <span><Code size={19} aria-hidden="true" />Aplicativo Apache-2.0</span>
           <span><ShieldCheck size={19} aria-hidden="true" />Local-first por design</span>
         </aside>
