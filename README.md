@@ -1,32 +1,37 @@
-# Korda Site
+# korda-site
 
-Landing page pública do Korda, uma interface local e visual para conectar e acompanhar agentes executados em terminais.
+Landing page do [Korda](https://github.com/Teolfeu/korda), publicada em
+<https://teolfeu.github.io/korda-site/>.
 
-Este repositório contém somente o site institucional em React e Vite. Ele não contém o aplicativo desktop, seus processos PTY ou o runtime de orquestração.
+## Stack
 
-## Desenvolvimento
+HTML e CSS estáticos (tema escuro), com um pequeno script para o menu mobile.
+Sem React, sem bundler na publicação.
 
-Requer Node.js 22 ou versão compatível.
+Arquivos servidos:
+
+- `publish/index.html`
+- `publish/styles.css`
+- `publish/korda-mark.png`
+- `publish/assets/` (ícone e Open Graph)
+
+## Local
 
 ```bash
-npm ci
-npm run dev
+npm run serve
+# http://localhost:4177
 ```
 
-## Build
-
-```bash
-npm run build
-```
-
-O resultado é gerado em `dist/`. O Vite usa `base: "./"`, permitindo publicar o mesmo build na raiz ou em um subdiretório do GitHub Pages.
-
-## Publicação
-
-O site é publicado no GitHub Pages a partir da branch `gh-pages`. Para enviar uma nova versão:
+## Publicar
 
 ```bash
 npm run deploy
 ```
 
-O repositório publica somente a landing. O aplicativo desktop e seus binários permanecem separados. Este repositório não possui licença de reutilização e não deve ser descrito como open source.
+Isso envia o conteúdo de `publish/` para a branch `gh-pages`.
+
+## Conteúdo
+
+Os textos e o link de download devem acompanhar a release atual do app
+(`Korda-0.1.1-x86_64.AppImage` na v0.1.1). Ao lançar uma versão nova, atualize
+badge, exemplos de `chmod` e os botões de download em `publish/index.html`.
