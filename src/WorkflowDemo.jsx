@@ -1,12 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  Binoculars,
-  Brain,
+  ArrowClockwise,
+  BracketsCurly,
+  Cube,
+  CursorClick,
   Lightning,
+  PaperPlaneTilt,
   Pause,
   Play,
-  ShieldCheck,
+  ShareNetwork,
+  SquaresFour,
+  Stop,
+  Target,
 } from "@phosphor-icons/react";
+import "./workflow-demo.css";
 
 const phases = [
   { id: "plan", label: "Planejando", duration: 1800, detail: "O Orquestrador organiza o objetivo e identifica os especialistas necessários." },
@@ -52,11 +59,19 @@ const scenarios = [
   },
 ];
 
+// Ícone e cor seguem a identidade real que o app atribui a cada CLI
+// (a mesma usada nos nós do canvas e no diálogo de novo agente).
 const nodes = [
-  { id: "orchestrator", className: "workflow-node--orchestrator", role: "Orquestrador", name: "Exemplo · Codex", Icon: Brain },
-  { id: "executor", className: "workflow-node--executor", role: "Executor", name: "Exemplo · OpenCode", Icon: Lightning },
-  { id: "researcher", className: "workflow-node--researcher", role: "Pesquisador", name: "Exemplo · Hermes", Icon: Binoculars },
-  { id: "reviewer", className: "workflow-node--reviewer", role: "Revisor", name: "Exemplo · Grok", Icon: ShieldCheck },
+  { id: "orchestrator", className: "workflow-node--orchestrator", role: "Orquestrador", name: "Codex", Icon: Cube },
+  { id: "executor", className: "workflow-node--executor", role: "Executor", name: "OpenCode", Icon: BracketsCurly },
+  { id: "researcher", className: "workflow-node--researcher", role: "Pesquisador", name: "Hermes", Icon: PaperPlaneTilt },
+  { id: "reviewer", className: "workflow-node--reviewer", role: "Revisor", name: "Grok", Icon: Lightning },
+];
+
+const quickActions = [
+  { id: "focus", label: "Focar", Icon: CursorClick },
+  { id: "restart", label: "Reiniciar", Icon: ArrowClockwise },
+  { id: "stop", label: "Parar", Icon: Stop },
 ];
 
 const prefersReducedMotion = () => typeof window !== "undefined"
@@ -108,6 +123,19 @@ function taskFor(nodeId, scenario) {
   return scenario[nodeId];
 }
 
+function NodeStatus({ state }) {
+  return <span className={`workflow-node__state is-${state}`}><i aria-hidden="true" />{stateLabel(state)}</span>;
+}
+
+function NodeProgress({ node, progress }) {
+  return <div className="workflow-node__footer">
+    <div className="workflow-node__progress" role="progressbar" aria-label={`Progresso de ${node.role}`} aria-valuemin="0" aria-valuemax="100" aria-valuenow={progress}>
+      <i style={{ width: `${progress}%` }} aria-hidden="true" />
+    </div>
+    <span className="workflow-node__progress-value">{progress}%</span>
+  </div>;
+}
+
 function WorkflowNode({ node, scenario, phaseId }) {
   const state = nodeState(node.id, phaseId);
   const progress = nodeProgress(node.id, phaseId);
@@ -116,15 +144,32 @@ function WorkflowNode({ node, scenario, phaseId }) {
     <header className="workflow-node__head">
       <span className="workflow-node__icon"><Icon size={18} weight="duotone" aria-hidden="true" /></span>
       <span className="workflow-node__identity"><small className="workflow-node__role">{node.role}</small><b className="workflow-node__name">{node.name}</b></span>
-      <span className={`workflow-node__state is-${state}`}><i aria-hidden="true" />{stateLabel(state)}</span>
+      <NodeStatus state={state} />
     </header>
     <small className="workflow-node__task-label">Tarefa atual</small>
     <p className="workflow-node__task">{taskFor(node.id, scenario)}</p>
-    <footer className="workflow-node__footer">
-      <div className="workflow-node__progress" role="progressbar" aria-label={`Progresso de ${node.role}`} aria-valuemin="0" aria-valuemax="100" aria-valuenow={progress}>
-        <i style={{ width: `${progress}%` }} aria-hidden="true" />
-      </div>
-      <span className="workflow-node__progress-value">{progress}%</span>
+    <NodeProgress node={node} progress={progress} />
+  </article>;
+}
+
+function DashboardCard({ node, scenario, phaseId, onQuickAction }) {
+  const state = nodeState(node.id, phaseId);
+  const progress = nodeProgress(node.id, phaseId);
+  const Icon = node.Icon;
+  return <article className={`dash-card ${node.className} is-${state}`} aria-label={`${node.role}, ${node.name}: ${stateLabel(state)}, ${progress}%`}>
+    <header className="dash-card__head">
+      <span className="workflow-node__icon"><Icon size={18} weight="duotone" aria-hidden="true" /></span>
+      <span className="workflow-node__identity"><small className="workflow-node__role">{node.role}</small><b className="workflow-node__name">{node.name}</b></span>
+      <NodeStatus state={state} />
+    </header>
+    <p className="dash-card__task">{taskFor(node.id, scenario)}</p>
+    <NodeProgress node={node} progress={progress} />
+    <footer className="dash-card__actions" aria-label={`Ações rápidas de ${node.role}`}>
+      {quickActions.map(({ id, label, Icon: ActionIcon }) => (
+        <button key={id} type="button" onClick={() => onQuickAction(label, node)} aria-label={`${label} ${node.role} (${node.name})`}>
+          <ActionIcon size={13} weight="bold" aria-hidden="true" />{label}
+        </button>
+      ))}
     </footer>
   </article>;
 }
@@ -133,6 +178,7 @@ export function WorkflowDemo() {
   const sectionRef = useRef(null);
   const [scenarioId, setScenarioId] = useState(scenarios[0].id);
   const [phaseIndex, setPhaseIndex] = useState(0);
+  const [view, setView] = useState("canvas");
   const [reducedMotion, setReducedMotion] = useState(prefersReducedMotion);
   const [userPaused, setUserPaused] = useState(prefersReducedMotion);
   const [inView, setInView] = useState(false);
@@ -195,6 +241,15 @@ export function WorkflowDemo() {
     setAnnouncement(`Cenário ${selected?.label || id} selecionado.`);
   };
 
+  const chooseView = (nextView) => {
+    setView(nextView);
+    setAnnouncement(nextView === "dashboard" ? "Visão dashboard: cards por agente com status ao vivo." : "Visão canvas: agentes conectados por cordas.");
+  };
+
+  const runQuickAction = (label, node) => {
+    setAnnouncement(`${label} ${node.role} (${node.name}) — ação ilustrativa na demonstração.`);
+  };
+
   const counters = phase.id === "plan"
     ? { active: 1, waiting: 3, complete: 0 }
     : phase.id === "delegate"
@@ -232,8 +287,8 @@ export function WorkflowDemo() {
   return <section className="workflow-demo" id="demonstracao" data-phase={phase.id} ref={sectionRef} aria-labelledby="workflow-demo-title">
     <div className="workflow-demo__intro">
       <p className="workflow-demo__eyebrow">Orquestração em movimento</p>
-      <h2 className="workflow-demo__title" id="workflow-demo-title">Um objetivo. Quatro papéis.</h2>
-      <p className="workflow-demo__copy">Escolha um cenário e veja agentes conectados planejarem, executarem e validarem juntos.</p>
+      <h2 className="workflow-demo__title" id="workflow-demo-title">Uma missão. <em>Duas visões.</em></h2>
+      <p className="workflow-demo__copy">Escolha um cenário e acompanhe os agentes no canvas — ou alterne para o <b>dashboard</b>, a nova visão do Korda: cards com status ao vivo, painel da missão e ações rápidas. No app, o toggle fica no topbar e a tecla <kbd>D</kbd> faz a troca.</p>
     </div>
 
     <div className="workflow-demo__shell">
@@ -243,10 +298,20 @@ export function WorkflowDemo() {
             <span className="workflow-demo__status-dot" aria-hidden="true" />
             <span><b>{scenario.label}</b><small>{phase.label} · {phase.detail}</small></span>
           </div>
-          <div className="workflow-demo__counters" aria-label="Resumo dos agentes">
-            <span><i className="is-active" aria-hidden="true" /><b>{counters.active}</b> ativos</span>
-            <span><i className="is-waiting" aria-hidden="true" /><b>{counters.waiting}</b> aguardando</span>
-            <span><i className="is-complete" aria-hidden="true" /><b>{counters.complete}</b> concluídos</span>
+          <div className="workflow-demo__toolbar-side">
+            <div className="workflow-demo__counters" aria-label="Resumo dos agentes">
+              <span><i className="is-active" aria-hidden="true" /><b>{counters.active}</b> ativos</span>
+              <span><i className="is-waiting" aria-hidden="true" /><b>{counters.waiting}</b> aguardando</span>
+              <span><i className="is-complete" aria-hidden="true" /><b>{counters.complete}</b> concluídos</span>
+            </div>
+            <div className="workflow-demo__view-toggle" role="group" aria-label="Alternar visão da demonstração">
+              <button type="button" aria-pressed={view === "canvas"} onClick={() => chooseView("canvas")}>
+                <ShareNetwork size={14} weight="bold" aria-hidden="true" />Canvas
+              </button>
+              <button type="button" aria-pressed={view === "dashboard"} onClick={() => chooseView("dashboard")}>
+                <SquaresFour size={14} weight="bold" aria-hidden="true" />Dashboard<kbd aria-hidden="true">D</kbd>
+              </button>
+            </div>
           </div>
         </div>
         <ol className="workflow-demo__timeline" aria-label="Etapas do fluxo">
@@ -261,24 +326,40 @@ export function WorkflowDemo() {
         </ol>
       </header>
 
-      <div className="workflow-demo__stage" data-phase={phase.id} aria-label={`Canvas simulado na fase ${phase.label}`}>
-        <svg className="workflow-demo__cords" viewBox="0 0 1000 460" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-          <path className="workflow-cord workflow-cord__base workflow-cord--executor" d="M 500 145 C 500 225 180 210 180 318" />
-          <path className={cordClasses("executor", phase.id)} d="M 500 145 C 500 225 180 210 180 318" />
-          <path className="workflow-cord workflow-cord__base workflow-cord--researcher" d="M 500 145 C 500 220 500 235 500 318" />
-          <path className={cordClasses("researcher", phase.id)} d="M 500 145 C 500 220 500 235 500 318" />
-          <path className="workflow-cord workflow-cord__base workflow-cord--reviewer" d="M 500 145 C 500 225 820 210 820 318" />
-          <path className={cordClasses("reviewer", phase.id)} d="M 500 145 C 500 225 820 210 820 318" />
-        </svg>
-        <div className="workflow-demo__orchestrator">
-          <WorkflowNode node={nodes[0]} scenario={scenario} phaseId={phase.id} />
+      {view === "canvas" ? (
+        <div className="workflow-demo__stage" data-phase={phase.id} aria-label={`Canvas simulado na fase ${phase.label}`}>
+          <svg className="workflow-demo__cords" viewBox="0 0 1000 460" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <path className="workflow-cord workflow-cord__base workflow-cord--executor" d="M 500 145 C 500 225 180 210 180 318" />
+            <path className={cordClasses("executor", phase.id)} d="M 500 145 C 500 225 180 210 180 318" />
+            <path className="workflow-cord workflow-cord__base workflow-cord--researcher" d="M 500 145 C 500 220 500 235 500 318" />
+            <path className={cordClasses("researcher", phase.id)} d="M 500 145 C 500 220 500 235 500 318" />
+            <path className="workflow-cord workflow-cord__base workflow-cord--reviewer" d="M 500 145 C 500 225 820 210 820 318" />
+            <path className={cordClasses("reviewer", phase.id)} d="M 500 145 C 500 225 820 210 820 318" />
+          </svg>
+          <div className="workflow-demo__orchestrator">
+            <WorkflowNode node={nodes[0]} scenario={scenario} phaseId={phase.id} />
+          </div>
+          <div className="workflow-demo__workers">
+            <WorkflowNode node={nodes[1]} scenario={scenario} phaseId={phase.id} />
+            <WorkflowNode node={nodes[2]} scenario={scenario} phaseId={phase.id} />
+            <WorkflowNode node={nodes[3]} scenario={scenario} phaseId={phase.id} />
+          </div>
         </div>
-        <div className="workflow-demo__workers">
-          <WorkflowNode node={nodes[1]} scenario={scenario} phaseId={phase.id} />
-          <WorkflowNode node={nodes[2]} scenario={scenario} phaseId={phase.id} />
-          <WorkflowNode node={nodes[3]} scenario={scenario} phaseId={phase.id} />
+      ) : (
+        <div className="workflow-demo__stage workflow-demo__stage--dashboard" data-phase={phase.id} aria-label={`Dashboard simulado na fase ${phase.label}`}>
+          <article className="dash-mission">
+            <span className="dash-mission__icon"><Target size={20} weight="duotone" aria-hidden="true" /></span>
+            <span className="dash-mission__copy">
+              <small>Missão em andamento</small>
+              <b>{scenario.objective}</b>
+            </span>
+            <span className="dash-mission__phase">{phase.label}</span>
+          </article>
+          <div className="dash-grid">
+            {nodes.map((node) => <DashboardCard key={node.id} node={node} scenario={scenario} phaseId={phase.id} onQuickAction={runQuickAction} />)}
+          </div>
         </div>
-      </div>
+      )}
 
       <footer className="workflow-demo__footer">
         <div className="workflow-demo__scenarios" aria-label="Cenários da demonstração">

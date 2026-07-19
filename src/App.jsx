@@ -5,23 +5,36 @@ import {
   ArrowsLeftRight,
   Binoculars,
   Brain,
+  BracketsCurly,
   Browser,
   ChartLineUp,
+  ChatCircleText,
   Check,
   Code,
+  Command,
+  Cube,
+  CursorClick,
   DownloadSimple,
   Eye,
   FolderOpen,
   GithubLogo,
   HardDrive,
+  Lightning,
   LinuxLogo,
   List,
   LockKey,
+  Moon,
+  PaperPlaneTilt,
   PencilSimple,
   ShieldCheck,
+  Sparkle,
+  SquaresFour,
+  StarFour,
   TerminalWindow,
+  Wrench,
   X,
 } from "@phosphor-icons/react";
+import { WorkflowDemo } from "./WorkflowDemo.jsx";
 
 const asset = (name) => `${import.meta.env.BASE_URL}assets/${name}`;
 const GITHUB_REPO = "https://github.com/Teolfeu/korda";
@@ -54,6 +67,21 @@ const workflow = [
     text: "Pedidos e respostas voltam pela corda para uma entrega legível.",
     Icon: ArrowsLeftRight,
   },
+];
+
+// Ícones e cores seguem a identidade que o app atribui a cada CLI detectada.
+const agents = [
+  { name: "Claude Code", command: "claude", color: "#c2410c", Icon: Sparkle },
+  { name: "Codex", command: "codex", color: "#7c3aed", Icon: Cube },
+  { name: "OpenCode", command: "opencode", color: "#059669", Icon: BracketsCurly },
+  { name: "Kimi", command: "kimi", color: "#2563eb", Icon: Moon },
+  { name: "Gemini", command: "gemini", color: "#0891b2", Icon: StarFour },
+  { name: "Grok", command: "grok", color: "#334155", Icon: Lightning },
+  { name: "Hermes", command: "hermes", color: "#db2777", Icon: PaperPlaneTilt },
+  { name: "Aider", command: "aider", color: "#57534e", Icon: Wrench },
+  { name: "Cursor Agent", command: "cursor-agent", color: "#6366f1", Icon: CursorClick },
+  { name: "Qwen", command: "qwen", color: "#dc2626", Icon: ChatCircleText },
+  { name: "GitHub Copilot", command: "copilot", color: "#0f172a", Icon: GithubLogo },
 ];
 
 const productViews = [
@@ -126,6 +154,25 @@ export function App() {
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [menuOpen]);
 
+  // Reveals suaves por seção; desativados quando o usuário prefere menos movimento.
+  useEffect(() => {
+    const elements = Array.from(document.querySelectorAll("[data-reveal]"));
+    if (!elements.length) return undefined;
+    if (typeof IntersectionObserver === "undefined" || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      elements.forEach((element) => element.classList.add("is-visible"));
+      return undefined;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, []);
+
   const closeMenu = () => setMenuOpen(false);
 
   return (
@@ -152,9 +199,10 @@ export function App() {
         <div className={`header-panel${menuOpen ? " is-open" : ""}`} id="main-navigation">
           <nav className="site-nav" aria-label="Navegação principal">
             <a href="#fluxo" onClick={closeMenu}>Como funciona</a>
+            <a href="#demonstracao" onClick={closeMenu}>Demonstração</a>
+            <a href="#agentes" onClick={closeMenu}>Agentes</a>
             <a href="#produto" onClick={closeMenu}>Produto</a>
             <a href="#controle" onClick={closeMenu}>Controle local</a>
-            <a href={`${GITHUB_REPO}#readme`} target="_blank" rel="noreferrer" onClick={closeMenu}>Documentação</a>
             <a href={GITHUB_REPO} target="_blank" rel="noreferrer" onClick={closeMenu}>GitHub</a>
           </nav>
           <DownloadButton className="button--header" />
@@ -164,7 +212,7 @@ export function App() {
       <main id="conteudo" tabIndex="-1">
         <section className="hero grid-surface" id="top">
           <div className="hero-copy">
-            <p className="eyebrow">Orquestração visual para agentes de terminal</p>
+            <p className="eyebrow">Bancada espacial para orquestrar agentes de IA locais</p>
             <h1><span>Conecte agentes.</span><span>Veja o <em>trabalho acontecer.</em></span></h1>
             <p className="hero-lead">Abra seu projeto, defina o papel de cada agente e conecte o fluxo em um único canvas — com terminais reais rodando na sua máquina.</p>
             <div className="hero-actions">
@@ -176,8 +224,8 @@ export function App() {
             </div>
             <dl className="hero-facts">
               <div><dt><LockKey size={20} aria-hidden="true" />Coordenação local</dt><dd>O runtime do Korda fica no seu ambiente.</dd></div>
-              <div><dt><TerminalWindow size={20} aria-hidden="true" />Terminal no centro</dt><dd>Trabalhe com as CLIs já instaladas.</dd></div>
-              <div><dt><Eye size={20} aria-hidden="true" />Fluxo visível</dt><dd>Veja papéis, conexões e respostas.</dd></div>
+              <div><dt><TerminalWindow size={20} aria-hidden="true" />Suas CLIs, detectadas</dt><dd>Do Claude Code ao Copilot — ou qualquer comando do PATH.</dd></div>
+              <div><dt><SquaresFour size={20} aria-hidden="true" />Canvas ou dashboard</dt><dd>Alterne as visões pelo topbar ou com a tecla D.</dd></div>
             </dl>
           </div>
 
@@ -194,10 +242,11 @@ export function App() {
           <span><LinuxLogo size={19} aria-hidden="true" />Linux x86_64</span>
           <span><HardDrive size={19} aria-hidden="true" />AppImage v0.1.0</span>
           <span><Code size={19} aria-hidden="true" />Aplicativo Apache-2.0</span>
+          <span><ShieldCheck size={19} aria-hidden="true" />Local-first por design</span>
         </aside>
 
         <section className="workflow section-boundary" id="fluxo">
-          <header className="section-heading section-heading--split">
+          <header className="section-heading section-heading--split" data-reveal>
             <div>
               <p className="eyebrow">Como funciona</p>
               <h2>Agentes conectados, <em>trabalho coordenado.</em></h2>
@@ -205,7 +254,7 @@ export function App() {
             <p>Você define os papéis e as conexões. O Korda entrega a topologia a cada agente e torna pedidos e respostas visíveis no canvas.</p>
           </header>
 
-          <ol className="workflow-steps">
+          <ol className="workflow-steps" data-reveal>
             {workflow.map(({ name, text, Icon }, index) => (
               <li key={name}>
                 <div className="workflow-step__top">
@@ -218,16 +267,48 @@ export function App() {
             ))}
           </ol>
 
-          <div className="context-note">
+          <div className="context-note" data-reveal>
             <ArrowsLeftRight size={24} aria-hidden="true" />
             <p><b>Conexão explícita, não exposição total.</b> Uma corda autoriza pedidos e respostas entre blocos específicos; ela não copia automaticamente todo o terminal ou histórico.</p>
           </div>
         </section>
 
-        <section className="product" id="produto">
-          <header className="section-heading section-heading--split">
+        <WorkflowDemo />
+
+        <section className="agents section-boundary section-boundary--tinted" id="agentes">
+          <header className="section-heading section-heading--split" data-reveal>
             <div>
-              <p className="eyebrow">Três visões. Um produto.</p>
+              <p className="eyebrow">Agentes</p>
+              <h2>Suas CLIs, <em>com identidade própria.</em></h2>
+            </div>
+            <p>O Korda resolve o PATH do login shell e varre diretórios comuns para encontrar as ferramentas instaladas. Cada CLI aparece com ícone e cor exclusivos — nos cards do diálogo de novo agente e nos nós do canvas.</p>
+          </header>
+
+          <ul className="agents-grid" aria-label="CLIs detectadas pelo Korda">
+            {agents.map(({ name, command, color, Icon }, index) => (
+              <li key={command} data-reveal style={{ "--agent-color": color, "--reveal-delay": `${Math.min(index * 30, 300)}ms` }}>
+                <span className="agents-grid__icon"><Icon size={20} weight="duotone" aria-hidden="true" /></span>
+                <span className="agents-grid__name">{name}</span>
+                <code>{command}</code>
+              </li>
+            ))}
+            <li className="agents-grid__custom" data-reveal style={{ "--reveal-delay": "330ms" }}>
+              <span className="agents-grid__icon"><Command size={20} weight="duotone" aria-hidden="true" /></span>
+              <span className="agents-grid__name">Qualquer CLI do PATH</span>
+              <small>Campo de comando livre no diálogo de novo agente</small>
+            </li>
+          </ul>
+
+          <div className="context-note" data-reveal>
+            <Sparkle size={24} aria-hidden="true" />
+            <p><b>Diálogo em passos, cards ricos.</b> Criar um agente é escolher a CLI, reconhecer a identidade visual e definir o papel — nenhuma ferramenta é empacotada ou revendida pelo Korda.</p>
+          </div>
+        </section>
+
+        <section className="product" id="produto">
+          <header className="section-heading section-heading--split" data-reveal>
+            <div>
+              <p className="eyebrow">Dentro do app</p>
               <h2>O workspace, o fluxo <em>e os detalhes.</em></h2>
             </div>
             <p>Do código ao canvas, do terminal às estatísticas. Tudo o que você precisa acompanhar permanece no mesmo espaço de trabalho.</p>
@@ -235,7 +316,7 @@ export function App() {
 
           <div className="product-grid">
             {productViews.map(({ number, eyebrow, title, text, image, alt, width, height, Icon, className = "" }) => (
-              <article className={`product-card ${className}`.trim()} key={number}>
+              <article className={`product-card ${className}`.trim()} key={number} data-reveal>
                 <div className="product-card__copy">
                   <span className="product-card__number">{number}</span>
                   <p className="product-card__eyebrow"><Icon size={18} aria-hidden="true" />{eyebrow}</p>
@@ -251,7 +332,7 @@ export function App() {
         </section>
 
         <section className="control section-boundary" id="controle">
-          <header className="section-heading section-heading--split">
+          <header className="section-heading section-heading--split" data-reveal>
             <div>
               <p className="eyebrow">Controle local</p>
               <h2>Local onde importa. <em>Explícito por design.</em></h2>
@@ -259,7 +340,7 @@ export function App() {
             <p>O Korda coordena processos no seu ambiente. Cada CLI mantém sua própria conta, conexão e política de dados.</p>
           </header>
 
-          <div className="control-grid">
+          <div className="control-grid" data-reveal>
             <article className="control-lead">
               <span><LockKey size={30} weight="duotone" aria-hidden="true" /></span>
               <h3>Seu workspace continua sob seu controle.</h3>
@@ -273,18 +354,18 @@ export function App() {
         </section>
 
         <section className="start">
-          <header className="section-heading section-heading--center">
+          <header className="section-heading section-heading--center" data-reveal>
             <p className="eyebrow">Primeiro fluxo</p>
             <h2>Do zero ao trabalho conectado <em>em três passos.</em></h2>
           </header>
           <ol className="start-steps">
-            <li><span>01</span><FolderOpen size={25} aria-hidden="true" /><h3>Abra uma pasta</h3><p>Escolha o projeto que será o workspace.</p></li>
-            <li><span>02</span><ArrowsLeftRight size={25} aria-hidden="true" /><h3>Adicione e conecte</h3><p>Selecione as CLIs detectadas e atribua os papéis.</p></li>
-            <li><span>03</span><Check size={25} aria-hidden="true" /><h3>Dê o objetivo</h3><p>Converse com o Orquestrador e acompanhe o fluxo.</p></li>
+            <li data-reveal style={{ "--reveal-delay": "0ms" }}><span>01</span><FolderOpen size={25} aria-hidden="true" /><h3>Abra uma pasta</h3><p>Escolha o projeto que será o workspace.</p></li>
+            <li data-reveal style={{ "--reveal-delay": "90ms" }}><span>02</span><ArrowsLeftRight size={25} aria-hidden="true" /><h3>Adicione e conecte</h3><p>Escolha as CLIs detectadas — ou um comando livre — e atribua os papéis.</p></li>
+            <li data-reveal style={{ "--reveal-delay": "180ms" }}><span>03</span><Check size={25} aria-hidden="true" /><h3>Dê o objetivo</h3><p>Converse com o Orquestrador e acompanhe o fluxo.</p></li>
           </ol>
         </section>
 
-        <section className="download-section grid-surface" id="download">
+        <section className="download-section grid-surface" id="download" data-reveal>
           <div className="download-section__mark"><img src={asset("korda-mark.png")} alt="" width="120" height="120" /></div>
           <div className="download-section__copy">
             <p className="eyebrow">Pronto para começar?</p>
