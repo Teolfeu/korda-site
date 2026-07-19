@@ -2,7 +2,7 @@
   "name": "korda-site",
   "version": "0.1.1",
   "private": true,
-  "description": "Landing page estática do Korda (GitHub Pages)",
+  "description": "Landing page estática do Korda",
   "scripts": {
     "serve": "python3 -m http.server 4177 --directory publish",
     "deploy": "gh-pages -d publish"

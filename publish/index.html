@@ -3,486 +3,288 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Korda — Bancada espacial para orquestrar agentes de IA locais</title>
-  <meta name="description" content="Korda conecta CLIs de IA locais em um canvas visual — com dashboard ao vivo, detecção de Claude Code, Codex, OpenCode, Kimi, Gemini, Grok, Hermes e mais. Local-first e open source (Apache-2.0)." />
+  <title>Korda — conecte agentes e veja o trabalho acontecer</title>
+  <meta name="description" content="Bancada desktop open source para orquestrar CLIs de IA locais em um canvas visual. Detecta Claude Code, Codex, OpenCode, Kimi, Gemini, Grok, Hermes e mais. Local-first, Apache-2.0." />
   <link rel="canonical" href="https://teolfeu.github.io/korda-site/" />
   <link rel="icon" type="image/png" href="assets/korda-app-icon.png" />
-  <meta name="theme-color" content="#0a0f1a" />
+  <meta name="theme-color" content="#ffffff" />
 
   <meta property="og:site_name" content="Korda" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://teolfeu.github.io/korda-site/" />
-  <meta property="og:title" content="Korda — Bancada espacial para orquestrar agentes de IA locais" />
-  <meta property="og:description" content="Canvas visual com terminais reais, dashboard ao vivo e detecção ampliada de CLIs no PATH. Local-first e open source (Apache-2.0)." />
+  <meta property="og:title" content="Korda — conecte agentes e veja o trabalho acontecer" />
+  <meta property="og:description" content="Canvas visual com terminais reais, dashboard ao vivo e detecção de CLIs no PATH. Local-first e open source." />
   <meta property="og:image" content="https://teolfeu.github.io/korda-site/assets/korda-og.png" />
   <meta property="og:locale" content="pt_BR" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Korda — Bancada espacial para orquestrar agentes de IA locais" />
-  <meta name="twitter:description" content="Orquestração local-first de terminais de IA: canvas espacial, cordas de permissão e missões com papéis. Open source (Apache-2.0)." />
+  <meta name="twitter:title" content="Korda — conecte agentes e veja o trabalho acontecer" />
+  <meta name="twitter:description" content="Orquestração local de agentes de terminal em um canvas visual." />
   <meta name="twitter:image" content="https://teolfeu.github.io/korda-site/assets/korda-og.png" />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <a class="skip" href="#main">Pular para o conteúdo</a>
 
-  <header class="nav" id="site-nav">
-    <div class="container nav-inner">
-      <a class="brand" href="#topo">
-        <img src="korda-mark.png" alt="" width="30" height="30" />
+  <header class="top">
+    <div class="wrap top__inner">
+      <a class="logo" href="#topo" aria-label="Korda — início">
+        <img src="assets/korda-mark.png" alt="" width="32" height="32" />
         <span>Korda</span>
       </a>
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-panel" aria-label="Abrir menu">
-        <span></span><span></span><span></span>
+
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav" aria-label="Abrir menu">
+        <span></span><span></span>
       </button>
-      <div class="nav-panel" id="nav-panel">
-        <nav class="nav-links" aria-label="Navegação principal">
-          <a href="#recursos">Recursos</a>
+
+      <div class="top__panel" id="nav">
+        <nav class="nav" aria-label="Principal">
+          <a href="#produto">Produto</a>
           <a href="#agentes">Agentes</a>
-          <a href="#como-funciona">Como funciona</a>
-          <a href="#instalacao">Instalação</a>
-          <a href="#privacidade">Privacidade</a>
+          <a href="#como">Como funciona</a>
+          <a href="#download">Download</a>
         </nav>
-        <a class="btn btn-ghost btn-sm" href="https://github.com/Teolfeu/korda" rel="noopener">GitHub</a>
+        <a class="btn btn--ghost btn--sm" href="https://github.com/Teolfeu/korda" rel="noopener">GitHub</a>
       </div>
     </div>
   </header>
 
-  <main id="conteudo">
-    <div id="topo"></div>
-
-    <!-- ============ HERO ============ -->
-    <section class="hero">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <p class="badge">v0.1.1 · Open source · Apache-2.0</p>
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" id="topo">
+      <div class="wrap hero__grid">
+        <div class="hero__copy">
+          <p class="kicker">Orquestração local e visual</p>
           <h1>
-            <img class="hero-mark" src="korda-mark.png" alt="" width="76" height="76" />
-            Korda
+            Conecte agentes.<br />
+            <em>Veja o trabalho acontecer.</em>
           </h1>
-          <p class="tagline">Bancada espacial para orquestrar terminais de IA locais.</p>
           <p class="lead">
-            Abra agentes e terminais locais, conecte-os por <strong>cordas</strong> e acompanhe a
-            colaboração em um canvas visual — ou no dashboard ao vivo. Cada nó é um PTY real rodando
-            a CLI que você já usa, e nada sai da sua máquina.
+            Abra seu projeto, defina papéis e conecte CLIs de IA por cordas em um único canvas —
+            com terminais reais na sua máquina.
           </p>
-          <div class="cta-row">
-            <a class="btn btn-primary" href="https://github.com/Teolfeu/korda/releases/download/v0.1.1/Korda-0.1.1-x86_64.AppImage" rel="noopener">Baixar para Linux · AppImage</a>
-            <a class="btn btn-ghost" href="https://github.com/Teolfeu/korda" rel="noopener">Ver no GitHub</a>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="https://github.com/Teolfeu/korda/releases/download/v0.1.1/Korda-0.1.1-x86_64.AppImage" rel="noopener">
+              Baixar para Linux
+            </a>
+            <a class="btn btn--ghost" href="https://github.com/Teolfeu/korda" rel="noopener">Ver no GitHub</a>
           </div>
-          <p class="hero-note">Detecta Claude Code, Codex, OpenCode, Kimi, Gemini, Grok, Hermes e qualquer comando do PATH.</p>
+          <ul class="hero__meta">
+            <li>AppImage · Linux x86_64</li>
+            <li>v0.1.1</li>
+            <li>Apache-2.0</li>
+            <li>Local-first</li>
+          </ul>
         </div>
 
-        <div class="hero-canvas" aria-hidden="true">
-          <div class="window">
-            <div class="window-bar">
-              <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-              <span class="window-title">korda — canvas</span>
-            </div>
-            <svg viewBox="0 0 640 440" role="img" aria-label="Ilustração do canvas Korda com agentes conectados por cordas">
-              <defs>
-                <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
-                  <circle cx="1.6" cy="1.6" r="1.6" fill="rgba(148,163,184,.16)" />
-                </pattern>
-              </defs>
-              <rect width="640" height="440" fill="url(#grid)" />
-
-              <!-- cordas -->
-              <path class="cord" d="M240,344 C280,344 290,356 330,356" />
-              <path class="cord" d="M128,152 C128,230 148,232 148,300" />
-              <path class="cord" d="M473,132 C473,228 442,238 426,316" />
-              <path class="cord" d="M520,132 C520,166 492,166 480,190" />
-              <path class="cord cord-active" d="M220,104 C290,104 310,84 380,84" />
-
-              <!-- etiqueta do pedido ativo -->
-              <g class="ask-pill">
-                <rect x="256" y="72" width="88" height="22" rx="11" />
-                <text x="300" y="87" text-anchor="middle">korda ask</text>
-              </g>
-
-              <!-- Orquestrador -->
-              <g class="node">
-                <rect x="36" y="56" width="184" height="96" rx="12" />
-                <circle class="st st-run" cx="52" cy="74" r="4" />
-                <text class="node-title" x="64" y="78">Orquestrador</text>
-                <text class="node-sub" x="52" y="96">claude code</text>
-                <rect class="tl" x="52" y="110" width="120" height="6" rx="3" />
-                <rect class="tl" x="52" y="124" width="88" height="6" rx="3" />
-                <rect class="tl tl-accent" x="52" y="138" width="104" height="6" rx="3" />
-              </g>
-
-              <!-- Executor -->
-              <g class="node">
-                <rect x="380" y="36" width="184" height="96" rx="12" />
-                <circle class="st st-run" cx="396" cy="54" r="4" />
-                <text class="node-title" x="408" y="58">Executor</text>
-                <text class="node-sub" x="396" y="76">codex</text>
-                <rect class="tl" x="396" y="90" width="126" height="6" rx="3" />
-                <rect class="tl tl-accent" x="396" y="104" width="74" height="6" rx="3" />
-                <rect class="tl" x="396" y="118" width="98" height="6" rx="3" />
-              </g>
-
-              <!-- Navegador -->
-              <g class="node">
-                <rect x="400" y="190" width="164" height="64" rx="12" />
-                <circle class="st st-idle" cx="416" cy="206" r="4" />
-                <text class="node-title" x="428" y="210">Navegador</text>
-                <rect class="urlbar" x="412" y="222" width="140" height="16" rx="8" />
-                <text class="url" x="424" y="233">https://localhost:4173</text>
-              </g>
-
-              <!-- Pesquisador -->
-              <g class="node">
-                <rect x="56" y="300" width="184" height="88" rx="12" />
-                <circle class="st st-idle" cx="72" cy="318" r="4" />
-                <text class="node-title" x="84" y="322">Pesquisador</text>
-                <text class="node-sub" x="72" y="340">opencode</text>
-                <rect class="tl" x="72" y="354" width="110" height="6" rx="3" />
-                <rect class="tl" x="72" y="368" width="132" height="6" rx="3" />
-              </g>
-
-              <!-- Revisor -->
-              <g class="node">
-                <rect x="330" y="316" width="184" height="88" rx="12" />
-                <circle class="st st-wait" cx="346" cy="334" r="4" />
-                <text class="node-title" x="358" y="338">Revisor</text>
-                <text class="node-sub" x="346" y="356">hermes</text>
-                <rect class="tl" x="346" y="370" width="96" height="6" rx="3" />
-                <rect class="cursor" x="346" y="386" width="8" height="10" rx="2" />
-              </g>
-            </svg>
-          </div>
-        </div>
+        <figure class="hero__shot">
+          <img
+            src="assets/korda-canvas-real.webp"
+            width="1440"
+            height="900"
+            alt="Canvas do Korda com agentes Codex, OpenCode, Grok e Hermes conectados por cordas"
+            fetchpriority="high"
+          />
+        </figure>
       </div>
     </section>
 
-    <!-- ============ PROPOSTA DE VALOR ============ -->
-    <section class="section" id="valor">
-      <div class="container">
-        <div class="value-grid">
-          <div class="value-item">
-            <h3>Local-first de verdade</h3>
-            <p>Sem analytics, sem sistema de contas, sem nuvem do Korda. O estado fica na sua máquina, por workspace.</p>
-          </div>
-          <div class="value-item">
-            <h3>Seus agentes, suas assinaturas</h3>
-            <p>O Korda detecta as CLIs de IA instaladas no PATH. As ferramentas e assinaturas não são incluídas nem revendidas.</p>
-          </div>
-          <div class="value-item">
-            <h3>Permissão explícita entre agentes</h3>
-            <p>Agentes só trocam mensagens quando uma corda autoriza. Remover a corda revoga a autorização na hora.</p>
-          </div>
-        </div>
+    <!-- STRIP -->
+    <section class="strip" aria-label="Proposta de valor">
+      <div class="wrap strip__grid">
+        <article>
+          <h3>Local de verdade</h3>
+          <p>Sem contas do Korda, sem analytics embutido. O estado fica no seu workspace.</p>
+        </article>
+        <article>
+          <h3>Suas CLIs, suas contas</h3>
+          <p>O app detecta ferramentas no PATH. Nada é empacotado nem revendido.</p>
+        </article>
+        <article>
+          <h3>Permissão explícita</h3>
+          <p>Agentes só conversam quando uma corda autoriza. Remover a corda revoga na hora.</p>
+        </article>
       </div>
     </section>
 
-    <!-- ============ RECURSOS ============ -->
-    <section class="section" id="recursos">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">Recursos</p>
-          <h2>Uma bancada inteira, não um chat</h2>
-          <p class="section-sub">O Korda junta canvas espacial, terminais reais e um protocolo de colaboração entre agentes — com ledger e métricas para você enxergar o que aconteceu.</p>
-        </div>
-        <div class="features-grid">
-          <article class="feature">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
+    <!-- PRODUTO -->
+    <section class="section" id="produto">
+      <div class="wrap">
+        <header class="section__head">
+          <p class="kicker">Produto</p>
+          <h2>Workspace, terminal e dashboard no mesmo lugar</h2>
+          <p class="section__lead">Do arquivo ao fluxo entre agentes — sem trocar de janela a cada passo.</p>
+        </header>
+
+        <div class="show">
+          <article class="show__card show__card--wide">
+            <div class="show__copy">
+              <p class="kicker">Canvas</p>
+              <h3>Agentes, arquivos e navegador no mesmo quadro</h3>
+              <p>Arraste blocos, conecte bordas e acompanhe pedidos e respostas nas cordas.</p>
             </div>
-            <h3>Canvas espacial</h3>
-            <p>Cada bloco é um terminal vivo, navegador, nota ou arquivo. Arraste, redimensione pelas alças, conecte de borda a borda. O canvas é salvo por pasta de workspace e restaurado ao reabrir.</p>
+            <figure class="show__img">
+              <img src="assets/korda-workspace-browser-hq.png" width="1920" height="969" alt="Workspace e navegador no Korda" loading="lazy" />
+            </figure>
           </article>
-          <article class="feature">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="12" r="3"/><circle cx="17.5" cy="12" r="3"/><path d="M9.5 12h5"/></svg>
+
+          <article class="show__card">
+            <div class="show__copy">
+              <p class="kicker">Terminal</p>
+              <h3>PTY real para cada agente</h3>
+              <p>TUIs completas, parar e reiniciar no bloco. Cada CLI com identidade visual própria.</p>
             </div>
-            <h3>Cordas com permissão bidirecional</h3>
-            <p>Cordas autorizam pedidos pelo broker local autenticado: <code>korda ask</code>, <code>inbox</code>, <code>reply</code>, <code>wait</code>. Sem corda, a operação é recusada — o corpo das mensagens nunca é colado em outro PTY.</p>
+            <figure class="show__img">
+              <img src="assets/korda-terminal-hq.png" width="1800" height="1135" alt="Terminal de agente no canvas" loading="lazy" />
+            </figure>
           </article>
-          <article class="feature">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
+
+          <article class="show__card">
+            <div class="show__copy">
+              <p class="kicker">Atividade</p>
+              <h3>Métricas locais e honestas</h3>
+              <p>Sessões, PTYs e atividade observada. Tokens e custos só quando a CLI informa.</p>
             </div>
-            <h3>Missões com papéis</h3>
-            <p>Orquestrador, Executor, Pesquisador e Revisor. A missão tem objetivo, critério de conclusão e prazo — e só termina com <code>korda run finish</code>, <code>fail</code>, cancelamento ou timeout. Com Revisor no canvas, a conclusão exige <code>korda run approve</code>.</p>
-          </article>
-          <article class="feature">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7 9.5l3 3-3 3"/><path d="M12.5 15.5H17"/></svg>
-            </div>
-            <h3>Terminais PTY reais</h3>
-            <p>Sessões <code>node-pty</code> de verdade: TUIs completas, com parar e reiniciar no cabeçalho. O Hermes abre em <code>--tui</code> com a skill <code>korda-studio</code>; o OpenCode em <code>--mini --no-replay</code>.</p>
-          </article>
-          <article class="feature">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c3.2 3.4 3.2 13.6 0 17"/><path d="M12 3.5c-3.2 3.4-3.2 13.6 0 17"/></svg>
-            </div>
-            <h3>Navegador operável por agentes</h3>
-            <p>Blocos de browser ligados por corda respondem a <code>korda browser</code>: navigate, content, screenshot, inspect, fill. Somente HTTP(S), IDs de interação efêmeros e campos sensíveis bloqueados.</p>
-          </article>
-          <article class="feature">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4"/><path d="M4 20h16"/><path d="M8.5 16v-4.5"/><path d="M12.5 16V8"/><path d="M16.5 16v-2.5"/></svg>
-            </div>
-            <h3>Métricas e ledger operacional</h3>
-            <p>Duração, PTYs ativos, bytes de entrada e saída, pacotes de contexto e atividade por agente. O ledger guarda até 25 execuções e 200 eventos curtos — nunca mensagens ou transcrições.</p>
-          </article>
-          <article class="feature">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 18v2"/><path d="M16 18v2"/><path d="M7 9h2"/><path d="M11 9h6"/><path d="M7 13h4"/><path d="M13 13h4"/></svg>
-            </div>
-            <h3>Canvas ou dashboard</h3>
-            <p>Alterne entre o canvas espacial e um dashboard de status ao vivo pelo topbar ou com a tecla <kbd>D</kbd>. Veja agentes, missões e atividade sem perder o workspace.</p>
-          </article>
-          <article class="feature">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5.2c0 4.8-3 8-7 9.8-4-1.8-7-5-7-9.8V6z"/><path d="M9 11.8l2.2 2.2L15.5 9.5"/></svg>
-            </div>
-            <h3>Privado por arquitetura</h3>
-            <p>A fila do broker vive em um diretório efêmero <code>0700</code> dentro do workspace e é removida ao fechar. Saída de terminal, prompts, tokens e credenciais nunca são persistidos.</p>
+            <figure class="show__img">
+              <img src="assets/korda-metrics-hq.png" width="1800" height="1178" alt="Painel de métricas do Korda" loading="lazy" />
+            </figure>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- ============ AGENTES ============ -->
-    <section class="section section-alt" id="agentes">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">Agentes</p>
+    <!-- AGENTES -->
+    <section class="section section--soft" id="agentes">
+      <div class="wrap">
+        <header class="section__head">
+          <p class="kicker">Agentes</p>
           <h2>As CLIs que você já tem no PATH</h2>
-          <p class="section-sub">O Korda resolve o PATH do login shell e varre diretórios comuns. Cada CLI ganha ícone e cor próprios no diálogo e no canvas — nada é embutido no aplicativo.</p>
-        </div>
-        <ul class="agent-chips" aria-label="CLIs detectadas pelo Korda">
-          <li style="--chip:#c2410c"><span class="chip-dot"></span>Claude Code</li>
-          <li style="--chip:#7c3aed"><span class="chip-dot"></span>Codex</li>
-          <li style="--chip:#059669"><span class="chip-dot"></span>OpenCode</li>
-          <li style="--chip:#2563eb"><span class="chip-dot"></span>Kimi</li>
-          <li style="--chip:#0891b2"><span class="chip-dot"></span>Gemini</li>
-          <li style="--chip:#334155"><span class="chip-dot"></span>Grok</li>
-          <li style="--chip:#db2777"><span class="chip-dot"></span>Hermes</li>
-          <li style="--chip:#57534e"><span class="chip-dot"></span>Aider</li>
-          <li style="--chip:#6366f1"><span class="chip-dot"></span>Cursor Agent</li>
-          <li style="--chip:#dc2626"><span class="chip-dot"></span>Qwen</li>
-          <li style="--chip:#0f172a"><span class="chip-dot"></span>GitHub Copilot</li>
-          <li class="chip-custom"><span class="chip-dot"></span>Qualquer CLI do PATH</li>
+          <p class="section__lead">
+            O Korda resolve o login shell e diretórios comuns. Cada ferramenta aparece com cor própria —
+            ou digite qualquer comando livre no diálogo de novo agente.
+          </p>
+        </header>
+
+        <ul class="chips" aria-label="CLIs detectadas">
+          <li style="--c:#c2410c">Claude Code</li>
+          <li style="--c:#7c3aed">Codex</li>
+          <li style="--c:#059669">OpenCode</li>
+          <li style="--c:#2563eb">Kimi</li>
+          <li style="--c:#0891b2">Gemini</li>
+          <li style="--c:#334155">Grok</li>
+          <li style="--c:#db2777">Hermes</li>
+          <li style="--c:#57534e">Aider</li>
+          <li style="--c:#6366f1">Cursor Agent</li>
+          <li style="--c:#dc2626">Qwen</li>
+          <li style="--c:#0f172a">GitHub Copilot</li>
+          <li class="chips__any">Qualquer CLI do PATH</li>
         </ul>
-        <p class="agent-note">
-          No diálogo de novo agente, escolha uma CLI detectada ou digite um <strong>comando livre</strong>.
-          Cada bloco vira um PTY completo, com identidade visual própria no canvas.
-        </p>
       </div>
     </section>
 
-    <!-- ============ COMO FUNCIONA ============ -->
-    <section class="section" id="como-funciona">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">Como funciona</p>
+    <!-- COMO -->
+    <section class="section" id="como">
+      <div class="wrap">
+        <header class="section__head">
+          <p class="kicker">Como funciona</p>
           <h2>Da pasta vazia à missão concluída</h2>
-        </div>
+        </header>
+
         <ol class="steps">
-          <li class="step">
-            <span class="step-num">1</span>
+          <li>
+            <span>01</span>
             <h3>Abra uma pasta</h3>
-            <p>O canvas abre vazio com um guia de três passos. Escolha a pasta do workspace — se ela já tiver um canvas salvo, o estado é restaurado na hora.</p>
+            <p>O canvas é o workspace. Se já houver estado salvo, ele restaura na hora.</p>
           </li>
-          <li class="step">
-            <span class="step-num">2</span>
-            <h3>Adicione agentes e cordas</h3>
-            <p>Selecione uma CLI detectada e defina o papel: Orquestrador, Executor, Pesquisador ou Revisor. Arraste da borda de um bloco até outro para criar uma corda.</p>
+          <li>
+            <span>02</span>
+            <h3>Adicione e conecte</h3>
+            <p>Escolha a CLI, o papel e puxe cordas entre blocos. Só quem está ligado conversa.</p>
           </li>
-          <li class="step">
-            <span class="step-num">3</span>
+          <li>
+            <span>03</span>
             <h3>Inicie a missão</h3>
-            <p>Defina objetivo, critério de conclusão e prazo. O Orquestrador lê o briefing com <code>korda run status</code> e delega aos vizinhos por <code>ask</code> → <code>inbox</code> → <code>reply</code>.</p>
+            <p>Objetivo, critério e prazo. O Orquestrador delega com <code>ask</code> / <code>inbox</code> / <code>reply</code>.</p>
           </li>
-          <li class="step">
-            <span class="step-num">4</span>
-            <h3>Aprove e conclua</h3>
-            <p>Com Revisor configurado, a conclusão exige <code>korda run approve</code>. O Orquestrador finaliza com <code>korda run finish</code> — e o ledger e as estatísticas registram a execução.</p>
+          <li>
+            <span>04</span>
+            <h3>Revise e conclua</h3>
+            <p>Com Revisor, a conclusão exige aprovação. O ledger registra o ciclo — sem transcrições.</p>
           </li>
         </ol>
+
+        <div class="note">
+          <strong>Conexão explícita, não exposição total.</strong>
+          Uma corda autoriza pedidos entre blocos. Ela não copia o terminal nem o histórico inteiro.
+        </div>
       </div>
     </section>
 
-    <!-- ============ INSTALAÇÃO ============ -->
-    <section class="section section-alt" id="instalacao">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">Instalação</p>
-          <h2>AppImage ou código-fonte</h2>
+    <!-- DOWNLOAD -->
+    <section class="section section--soft" id="download">
+      <div class="wrap download">
+        <div class="download__copy">
+          <img class="download__mark" src="assets/korda-mark.png" alt="" width="56" height="56" />
+          <p class="kicker">Download</p>
+          <h2>Korda 0.1.1 para Linux</h2>
+          <p>AppImage x86_64. Releases oficiais com <code>SHA256SUMS</code>, build em Debian Bullseye + Node 22.</p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="https://github.com/Teolfeu/korda/releases/download/v0.1.1/Korda-0.1.1-x86_64.AppImage" rel="noopener">
+              Baixar AppImage
+            </a>
+            <a class="btn btn--ghost" href="https://github.com/Teolfeu/korda/releases/latest" rel="noopener">Ver release</a>
+          </div>
         </div>
-        <div class="install-grid">
-          <article class="install-card">
-            <h3>AppImage · Linux x86_64</h3>
-            <p>Baixe o arquivo na <a href="https://github.com/Teolfeu/korda/releases/latest" rel="noopener">última Release</a>, torne-o executável e abra:</p>
-            <pre><code>chmod +x Korda-0.1.1-x86_64.AppImage
+        <div class="download__code">
+          <p class="download__label">Depois do download</p>
+          <pre><code>chmod +x Korda-0.1.1-x86_64.AppImage
 ./Korda-0.1.1-x86_64.AppImage</code></pre>
-            <p class="fine">Releases oficiais são construídas em um contêiner Debian Bullseye com Node 22 (compatibilidade de glibc do <code>node-pty</code>) e publicadas com <code>SHA256SUMS</code>. Sem FUSE: <code>--appimage-extract-and-run</code>.</p>
-          </article>
-          <article class="install-card">
-            <h3>A partir do código</h3>
-            <p>Requer Node.js 22, npm e as dependências nativas de compilação do <code>node-pty</code>:</p>
-            <pre><code>git clone https://github.com/Teolfeu/korda.git
-cd korda
-npm ci
-npm run app</code></pre>
-            <p class="fine">Prévia visual sem PTY nativo (terminais simulados): <code>npm run dev -- --port 4173</code>. Para gerar o AppImage localmente: <code>npm run package:linux</code>.</p>
-          </article>
+          <p class="fine">Sem FUSE: <code>./Korda-0.1.1-x86_64.AppImage --appimage-extract-and-run</code></p>
+          <p class="fine">Código: <code>git clone … && npm ci && npm run app</code> (Node 22)</p>
         </div>
       </div>
     </section>
-
-    <!-- ============ ATALHOS / USO BÁSICO ============ -->
-    <section class="section" id="atalhos">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">Uso básico</p>
-          <h2>Atalhos e gestos do canvas</h2>
-        </div>
-        <div class="shortcut-grid">
-          <div class="shortcut"><kbd>V</kbd><span>Ferramenta selecionar</span></div>
-          <div class="shortcut"><kbd>T</kbd><span>Novo terminal</span></div>
-          <div class="shortcut"><kbd>A</kbd><span>Novo agente</span></div>
-          <div class="shortcut"><kbd>N</kbd><span>Nova nota</span></div>
-          <div class="shortcut"><kbd>X</kbd><span>Novo texto</span></div>
-          <div class="shortcut"><kbd>B</kbd><span>Novo navegador</span></div>
-          <div class="shortcut"><kbd>D</kbd><span>Alternar canvas / dashboard</span></div>
-          <div class="shortcut"><kbd>Ctrl/⌘ S</kbd><span>Salvar arquivo no editor</span></div>
-          <div class="shortcut"><kbd>Delete</kbd> <kbd>Backspace</kbd><span>Remover a corda selecionada</span></div>
-          <div class="shortcut"><kbd>Shift</kbd> + arrastar<span>Forçar seleção de texto quando a TUI usa o mouse</span></div>
-        </div>
-        <ul class="usage-tips">
-          <li><strong>Criar corda:</strong> arraste de qualquer trecho da borda de um bloco até a borda de outro — também funciona por teclado, nos quatro pontos acessíveis da borda.</li>
-          <li><strong>Remover corda:</strong> clique na corda e use o botão <em>Remover corda</em> acima do canvas.</li>
-          <li><strong>Redimensionar:</strong> arraste uma alça azul ou informe Largura e Altura exatas no Inspector.</li>
-          <li><strong>Parar / reiniciar:</strong> no cabeçalho de cada terminal, sem remover o bloco.</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ============ PRIVACIDADE ============ -->
-    <section class="section section-alt" id="privacidade">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">Privacidade</p>
-          <h2>O que fica — e o que pode sair — da sua máquina</h2>
-          <p class="section-sub">Resumo do <a href="https://github.com/Teolfeu/korda/blob/main/docs/PRIVACY.md" rel="noopener">modelo de privacidade</a>: o Korda não tem analytics, sistema de contas nem serviço de nuvem próprio.</p>
-        </div>
-        <div class="privacy-grid">
-          <article class="privacy-card privacy-local">
-            <h3>Fica na sua máquina</h3>
-            <ul>
-              <li>Layout e configuração do canvas, salvos localmente por workspace.</li>
-              <li>Saída de PTY, prompts, tokens do broker e credenciais <strong>não são persistidos</strong> no estado do canvas.</li>
-              <li>O broker local guarda estado de pedidos autenticado e limitado em um diretório efêmero privado do workspace, removido ao fechar.</li>
-              <li>As métricas de sessão usam dados estruturados observados localmente e não leem transcrições de terminal.</li>
-            </ul>
-          </article>
-          <article class="privacy-card privacy-external">
-            <h3>Pode sair — por sua conta</h3>
-            <ul>
-              <li>As CLIs de agentes de terceiros que você escolhe contatam os próprios provedores, conforme a configuração, autenticação e política de privacidade de cada uma.</li>
-              <li>Um bloco de navegador carrega a URL que você pedir.</li>
-              <li>O Korda não torna esses serviços externos locais ou offline.</li>
-            </ul>
-          </article>
-        </div>
-        <p class="privacy-note">
-          Agentes e terminais rodam com as permissões do seu usuário do sistema operacional — abra apenas
-          workspaces confiáveis. A leitura e gravação de arquivos pela interface do Korda é confinada à raiz
-          do workspace e rejeita symlinks, traversal e arquivos binários ou grandes demais.
-        </p>
-      </div>
-    </section>
-
-    <!-- ============ MVP / CONTRATO ============ -->
-    <section class="section" id="mvp">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">Contrato do MVP</p>
-          <h2>Garantias executáveis, não promessas</h2>
-          <p class="section-sub">O fluxo crítico — abrir workspace, iniciar PTYs, definir missão, delegar por cordas, revisar e concluir — é protegido por invariantes testadas. Veja o <a href="https://github.com/Teolfeu/korda/blob/main/MVP-CONTRACT.md" rel="noopener">MVP-CONTRACT.md</a>.</p>
-        </div>
-        <div class="mvp-grid">
-          <article class="mvp-card">
-            <h3>Invariantes</h3>
-            <ul>
-              <li>Entregar texto ou protocolo ao PTY não conclui uma missão.</li>
-              <li>Uma missão termina apenas por <code>finish</code>, <code>fail</code>, cancelamento ou timeout.</li>
-              <li>Com Revisor configurado, <code>finish</code> exige <code>approve</code> desse agente.</li>
-              <li>Snapshots e ledger guardam somente metadados curtos — nunca objetivos, prompts, respostas ou transcrições.</li>
-              <li>Agentes fora da missão não podem consultar o briefing.</li>
-              <li>Fechar o Orquestrador, trocar de workspace ou remover uma autorização não pode produzir sucesso falso.</li>
-            </ul>
-          </article>
-          <article class="mvp-card">
-            <h3>Portão de qualidade</h3>
-            <ul>
-              <li><code>npm test</code> prova o ciclo hands-free com um agente falso e o fluxo missão → resposta → revisão → conclusão.</li>
-              <li><code>npm run build</code> e um smoke test no Electron real completam o gate.</li>
-              <li>O AppImage é gerado em um contêiner limpo, inspecionado (símbolos do addon nativo, avisos de terceiros) e publicado com <code>SHA256SUMS</code>.</li>
-              <li>O artefato da release nunca é commitado no Git; CLIs externas não são empacotadas.</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ CTA FINAL ============ -->
-    <section class="cta-final">
-      <div class="container">
-        <h2>Pronto para orquestrar seus agentes?</h2>
-        <p>Baixe o AppImage, abra uma pasta e conecte sua primeira corda.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="https://github.com/Teolfeu/korda/releases/download/v0.1.1/Korda-0.1.1-x86_64.AppImage" rel="noopener">Baixar Korda 0.1.1</a>
-          <a class="btn btn-ghost" href="https://github.com/Teolfeu/korda" rel="noopener">Explorar o código</a>
-        </div>
-      </div>
-    </section>
-
   </main>
 
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <img src="korda-mark.png" alt="" width="26" height="26" />
+  <footer class="foot">
+    <div class="wrap foot__inner">
+      <a class="logo" href="#topo">
+        <img src="assets/korda-mark.png" alt="" width="28" height="28" />
         <span>Korda</span>
-        <p>Bancada espacial para orquestrar terminais de IA locais.</p>
-      </div>
-      <nav class="footer-links" aria-label="Links do rodapé">
-        <a href="https://github.com/Teolfeu/korda" rel="noopener">Repositório</a>
-        <a href="https://github.com/Teolfeu/korda/releases/latest" rel="noopener">Releases</a>
+      </a>
+      <nav class="foot__nav" aria-label="Rodapé">
+        <a href="https://github.com/Teolfeu/korda" rel="noopener">GitHub</a>
+        <a href="https://github.com/Teolfeu/korda/releases" rel="noopener">Releases</a>
         <a href="https://github.com/Teolfeu/korda/issues" rel="noopener">Issues</a>
-        <a href="https://github.com/Teolfeu/korda/blob/main/LICENSE" rel="noopener">Licença Apache-2.0</a>
-        <a href="https://github.com/Teolfeu/korda/blob/main/THIRD_PARTY_NOTICES.md" rel="noopener">Avisos de terceiros</a>
+        <a href="https://github.com/Teolfeu/korda/blob/main/LICENSE" rel="noopener">Licença</a>
+        <a href="https://github.com/Teolfeu/korda/blob/main/docs/PRIVACY.md" rel="noopener">Privacidade</a>
       </nav>
-    </div>
-    <div class="container footer-legal">
-      <p>© 2026 Teolfeu · Código licenciado sob Apache License 2.0. A marca e o logotipo Korda não recebem licença de marca; dependências e fontes mantêm suas próprias licenças.</p>
+      <p class="foot__legal">© 2026 Teolfeu · Apache-2.0 · A marca Korda não recebe licença de marca.</p>
     </div>
   </footer>
 
   <script>
     (() => {
-      const nav = document.getElementById("site-nav");
-      const toggle = nav?.querySelector(".nav-toggle");
-      const panel = document.getElementById("nav-panel");
-      if (!toggle || !panel) return;
+      const top = document.querySelector(".top");
+      const btn = document.querySelector(".menu-btn");
+      const panel = document.getElementById("nav");
+      if (!top || !btn || !panel) return;
 
-      const setOpen = (open) => {
-        nav.classList.toggle("is-open", open);
-        toggle.setAttribute("aria-expanded", open ? "true" : "false");
-        toggle.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
+      const set = (open) => {
+        top.classList.toggle("is-open", open);
+        btn.setAttribute("aria-expanded", String(open));
+        btn.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
       };
 
-      toggle.addEventListener("click", () => setOpen(!nav.classList.contains("is-open")));
-      panel.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setOpen(false)));
-      window.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && nav.classList.contains("is-open")) {
-          setOpen(false);
-          toggle.focus();
+      btn.addEventListener("click", () => set(!top.classList.contains("is-open")));
+      panel.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => set(false)));
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && top.classList.contains("is-open")) {
+          set(false);
+          btn.focus();
         }
       });
     })();

@@ -1,19 +1,15 @@
 # korda-site
 
-Landing page do [Korda](https://github.com/Teolfeu/korda), publicada em
+Landing do [Korda](https://github.com/Teolfeu/korda) em
 <https://teolfeu.github.io/korda-site/>.
 
 ## Stack
 
-HTML e CSS estáticos (tema escuro), com um pequeno script para o menu mobile.
-Sem React, sem bundler na publicação.
-
-Arquivos servidos:
+HTML + CSS estáticos (tema claro, alinhado ao app). Sem React.
 
 - `publish/index.html`
 - `publish/styles.css`
-- `publish/korda-mark.png`
-- `publish/assets/` (ícone e Open Graph)
+- `publish/assets/` — logo, ícone, OG e screenshots do produto
 
 ## Local
 
@@ -28,10 +24,10 @@ npm run serve
 npm run deploy
 ```
 
-Isso envia o conteúdo de `publish/` para a branch `gh-pages`.
+## Release
 
-## Conteúdo
+Ao publicar uma versão nova do app, atualize em `publish/index.html`:
 
-Os textos e o link de download devem acompanhar a release atual do app
-(`Korda-0.1.1-x86_64.AppImage` na v0.1.1). Ao lançar uma versão nova, atualize
-badge, exemplos de `chmod` e os botões de download em `publish/index.html`.
+- badge / título do download
+- links do AppImage
+- exemplos `chmod` / execução
